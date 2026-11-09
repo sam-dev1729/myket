@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "755848168140",
+    "project_id": "myket-c143a",
+    "storage_bucket": "myket-c143a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755848168140:android:26706b347dedf9e0aff869",
+        "android_client_info": {
+          "package_name": "com.example.myket"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUlZo-oHHHBWrXR8v_Q10R4iofQVpD1go"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

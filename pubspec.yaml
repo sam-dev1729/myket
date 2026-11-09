@@ -1,0 +1,89 @@
+name: myket
+
+description: "A new Flutter project."
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Icons & Fonts
+  cupertino_icons: ^2.0.0
+
+  # Date & Calendar
+  persian_calendar_widget: ^0.7.0
+  shamsi_date: ^1.0.3
+
+  # State Management
+  flutter_riverpod: ^3.4.3
+  riverpod_annotation: ^4.0.7
+
+  # Navigation
+  go_router: ^18.1.1
+
+  # Network
+  dio: ^5.5.0
+  retrofit: ^4.1.0
+  json_annotation: ^4.9.0
+
+  # Local Storage & Security
+  flutter_secure_storage: ^11.2.0
+  shared_preferences: ^2.3.0
+  crypto: ^3.0.8
+
+  # Logging
+  logger: ^2.4.0
+
+  # Authentication & Firebase
+  google_sign_in: ^6.2.1
+  firebase_auth: ^7.0.1
+  firebase_core: ^5.1.0
+  smart_auth: ^3.2.0
+
+  # Localization
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
+
+  # UI & Utilities
+  flutter_svg: ^2.0.10+1
+  cached_network_image: ^4.0.3
+  pinput: ^5.0.0
+
+
+  # Blog (WordPress HTML content)
+  flutter_html: ^3.0.0
+  
+  # 🚨 پین کردن اجباری نسخه‌ی html برای سازگاری با flutter_html
+  html: 0.15.6
+  csslib: ^1.0.2
+  
+  # Charts (Series analytics)
+  fl_chart: ^0.69.0
+
+  # File Picker
+  file_picker: ^13.3.2
+
+  # Payment & Deep Links
+  url_launcher: ^6.3.1
+  app_links: ^6.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  build_runner: ^2.4.13
+  retrofit_generator: ^10.3.2
+  riverpod_generator: ^4.0.9
+  json_serializable: ^6.8.0
+  flutter_lints: ^6.0.0
+  mocktail: ^1.0.4
+
+flutter:
+  uses-material-design: true
+  generate: true
