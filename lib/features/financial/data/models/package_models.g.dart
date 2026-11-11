@@ -58,11 +58,11 @@ Map<String, dynamic> _$PackageSummaryModelToJson(
 UserPackageModel _$UserPackageModelFromJson(Map<String, dynamic> json) =>
     UserPackageModel(
       id: json['id'] as String,
-      userId: json['user_id'] as String,
-      packageId: json['package_id'] as String,
-      status: json['status'] as String,
-      startsAt: json['starts_at'] as String,
-      expiresAt: json['expires_at'] as String,
+      userId: json['userId'] as String?,
+      packageId: json['packageId'] as String?,
+      status: json['status'] as String?,
+      startsAt: json['startsAt'] as String?,
+      expiresAt: json['expiresAt'] as String?,
       package: json['package'] == null
           ? null
           : PackageSummaryModel.fromJson(
@@ -73,11 +73,11 @@ UserPackageModel _$UserPackageModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$UserPackageModelToJson(UserPackageModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'user_id': instance.userId,
-      'package_id': instance.packageId,
+      'userId': instance.userId,
+      'packageId': instance.packageId,
       'status': instance.status,
-      'starts_at': instance.startsAt,
-      'expires_at': instance.expiresAt,
+      'startsAt': instance.startsAt,
+      'expiresAt': instance.expiresAt,
       'package': instance.package,
     };
 
@@ -124,6 +124,50 @@ Map<String, dynamic> _$CreateOrderResponseToJson(
   CreateOrderResponse instance,
 ) => <String, dynamic>{
   'order_id': instance.orderId,
+  'discount_amount': instance.discountAmount,
+  'wallet_amount': instance.walletAmount,
+  'gateway_amount': instance.gatewayAmount,
+  'status': instance.status,
+  'gateway_url': instance.gatewayUrl,
+};
+
+CreateMultiOrderRequest _$CreateMultiOrderRequestFromJson(
+  Map<String, dynamic> json,
+) => CreateMultiOrderRequest(
+  packageIds: (json['package_ids'] as List<dynamic>)
+      .map((e) => e as String)
+      .toList(),
+  discountCode: json['discount_code'] as String?,
+  useWallet: json['use_wallet'] as bool?,
+  paymentGateway: json['payment_gateway'] as String?,
+);
+
+Map<String, dynamic> _$CreateMultiOrderRequestToJson(
+  CreateMultiOrderRequest instance,
+) => <String, dynamic>{
+  'package_ids': instance.packageIds,
+  'discount_code': ?instance.discountCode,
+  'use_wallet': ?instance.useWallet,
+  'payment_gateway': ?instance.paymentGateway,
+};
+
+CreateMultiOrderResponse _$CreateMultiOrderResponseFromJson(
+  Map<String, dynamic> json,
+) => CreateMultiOrderResponse(
+  orderIds: (json['order_ids'] as List<dynamic>)
+      .map((e) => e as String)
+      .toList(),
+  discountAmount: (json['discount_amount'] as num).toInt(),
+  walletAmount: (json['wallet_amount'] as num).toInt(),
+  gatewayAmount: (json['gateway_amount'] as num).toInt(),
+  status: json['status'] as String,
+  gatewayUrl: json['gateway_url'] as String?,
+);
+
+Map<String, dynamic> _$CreateMultiOrderResponseToJson(
+  CreateMultiOrderResponse instance,
+) => <String, dynamic>{
+  'order_ids': instance.orderIds,
   'discount_amount': instance.discountAmount,
   'wallet_amount': instance.walletAmount,
   'gateway_amount': instance.gatewayAmount,

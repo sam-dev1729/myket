@@ -11,13 +11,9 @@ import 'wallet_controller.dart';
 import 'widgets/amount_formatter.dart';
 import 'widgets/payment_gateway_sheet.dart';
 
-/// Screen that lets the user select a package, choose to use wallet balance,
-/// and proceed to payment.
 class BuyPackageScreen extends ConsumerStatefulWidget {
-  /// The package ID to buy (optional, if passed, it's pre-selected).
   final String? initialPackageId;
 
-  /// Creates a [BuyPackageScreen] instance.
   const BuyPackageScreen({super.key, this.initialPackageId});
 
   @override
@@ -25,29 +21,43 @@ class BuyPackageScreen extends ConsumerStatefulWidget {
 }
 
 class _BuyPackageScreenState extends ConsumerState<BuyPackageScreen> {
-  String? _selectedPackageId;
+  final Set<String> _selectedPackageIds = {};
   bool _useWallet = false;
 
   @override
   void initState() {
     super.initState();
-    _selectedPackageId = widget.initialPackageId;
+    if (widget.initialPackageId != null) {
+      _selectedPackageIds.add(widget.initialPackageId!);
+    }
   }
 
-  /// Opens the gateway picker and submits the order.
   Future<void> _submit() async {
     final l10n = AppLocalizations.of(context)!;
-    if (_selectedPackageId == null) return;
+    if (_selectedPackageIds.isEmpty) return;
 
-    final gateway = await showModalBottomSheet<String>(
-      context: context,
-      builder: (_) => const PaymentGatewaySheet(),
-    );
-    if (gateway == null) return;
+    final packages = ref.read(packagesControllerProvider).value ?? [];
+    final selectedPkgs = packages.where((p) => _selectedPackageIds.contains(p.id)).toList();
+    final totalPrice = selectedPkgs.fold(0, (sum, p) => sum + p.price);
+
+    final wallet = ref.read(walletControllerProvider).value;
+    final walletAmount = _useWallet && wallet != null
+        ? (wallet.balance >= totalPrice ? totalPrice : wallet.balance)
+        : 0;
+    final gatewayAmount = totalPrice - walletAmount;
+
+    String? gateway;
+    if (gatewayAmount > 0) {
+      gateway = await showModalBottomSheet<String>(
+        context: context,
+        builder: (_) => const PaymentGatewaySheet(),
+      );
+      if (gateway == null) return;
+    }
 
     await ref
         .read(buyPackageControllerProvider.notifier)
-        .submit(packageId: _selectedPackageId!, useWallet: _useWallet, gateway: gateway);
+        .submit(packageIds: _selectedPackageIds.toList(), useWallet: _useWallet, gateway: gateway);
 
     if (!mounted) return;
     final st = ref.read(buyPackageControllerProvider);
@@ -60,7 +70,7 @@ class _BuyPackageScreenState extends ConsumerState<BuyPackageScreen> {
       ref.invalidate(activeUserPackagesProvider);
       Navigator.pop(context);
     } else if (st.status == BuyStatus.pending) {
-      final url = st.response?.gatewayUrl;
+      final url = st.response?.gatewayUrl ?? st.multiResponse?.gatewayUrl;
       if (url != null && url.isNotEmpty) {
         final opened = await UrlLauncherHelper.openExternal(url);
         if (opened && mounted) Navigator.pop(context);
@@ -90,8 +100,9 @@ class _BuyPackageScreenState extends ConsumerState<BuyPackageScreen> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: context.iconColor),
+        leading:
+      IconButton(
+          icon: Icon(Icons.arrow_back, color: context.iconColor), 
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -100,9 +111,16 @@ class _BuyPackageScreenState extends ConsumerState<BuyPackageScreen> {
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Center(child: Text('${l10n.genericErrorPrefix}: $e')),
           data: (packages) {
-            if (packages.isEmpty) {
-              return Center(child: Text(l10n.packagesEmpty));
-            }
+            if (packages.isEmpty) return Center(child: Text(l10n.packagesEmpty));
+
+            final wallet = walletAsync.value;
+            final selectedPkgs = packages.where((p) => _selectedPackageIds.contains(p.id)).toList();
+            final totalPrice = selectedPkgs.fold(0, (sum, p) => sum + p.price);
+
+            final int walletPart = (_useWallet && wallet != null)
+                ? (wallet.balance >= totalPrice ? totalPrice : wallet.balance)
+                : 0;
+            final int gatewayPart = totalPrice - walletPart;
 
             return Column(
               children: [
@@ -124,11 +142,18 @@ class _BuyPackageScreenState extends ConsumerState<BuyPackageScreen> {
                         ),
                         const SizedBox(height: AppConstants.paddingLarge),
 
-                        // List of packages
                         ...packages.map((p) {
-                          final isSelected = _selectedPackageId == p.id;
+                          final isSelected = _selectedPackageIds.contains(p.id);
                           return GestureDetector(
-                            onTap: () => setState(() => _selectedPackageId = p.id),
+                            onTap: () {
+                              setState(() {
+                                if (isSelected) {
+                                  _selectedPackageIds.remove(p.id);
+                                } else {
+                                  _selectedPackageIds.add(p.id);
+                                }
+                              });
+                            },
                             child: Container(
                               margin: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
                               padding: const EdgeInsets.all(AppConstants.paddingMedium),
@@ -207,44 +232,112 @@ class _BuyPackageScreenState extends ConsumerState<BuyPackageScreen> {
 
                         const SizedBox(height: AppConstants.paddingMedium),
 
-                        // Wallet Toggle
                         walletAsync.when(
                           loading: () => const SizedBox.shrink(),
                           error: (_, __) => const SizedBox.shrink(),
-                          data: (w) => Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                          data: (w) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
                                   children: [
-                                    Text(
-                                      l10n.buyPackageUseWalletLabel,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            l10n.buyPackageUseWalletLabel,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          Text(
+                                            l10n.creditAmountLabel(
+                                              AmountFormatter.toTomanNaked(w.balance),
+                                              l10n.currencyRial,
+                                            ),
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: context.textSecondaryColor,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    Text(
-                                      l10n.creditAmountLabel(
-                                        AmountFormatter.toTomanNaked(w.balance),
-                                        l10n.currencyRial,
-                                      ),
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: context.textSecondaryColor,
-                                      ),
+                                    Switch(
+                                      value: _useWallet,
+                                      onChanged: (v) => setState(() => _useWallet = v),
+                                      activeColor: AppTheme.primary,
                                     ),
                                   ],
                                 ),
-                              ),
-                              const SizedBox(width: 16),
-                              Switch(
-                                value: _useWallet,
-                                onChanged: (v) => setState(() => _useWallet = v),
-                                activeColor: AppTheme.primary,
-                              ),
-                            ],
-                          ),
+                                if (_useWallet && selectedPkgs.isNotEmpty) ...[
+                                  const SizedBox(height: 8),
+                                  Container(
+                                    padding: const EdgeInsets.all(AppConstants.paddingMedium),
+                                    decoration: BoxDecoration(
+                                      color: context.surfaceVariantColor,
+                                      borderRadius: BorderRadius.circular(
+                                        AppConstants.borderRadius,
+                                      ),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              l10n.walletTitle,
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                color: context.textSecondaryColor,
+                                              ),
+                                            ),
+                                            Text(
+                                              l10n.currencyTomanWithAmount(
+                                                AmountFormatter.toTomanNaked(walletPart),
+                                              ),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                                color: AppTheme.success,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const Divider(),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              l10n.paymentGatewaySheetTitle,
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                color: context.textSecondaryColor,
+                                              ),
+                                            ),
+                                            Text(
+                                              l10n.currencyTomanWithAmount(
+                                                AmountFormatter.toTomanNaked(gatewayPart),
+                                              ),
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                                color: gatewayPart > 0
+                                                    ? AppTheme.error
+                                                    : context.textTertiaryColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            );
+                          },
                         ),
                         const SizedBox(height: 100),
                       ],
@@ -252,16 +345,15 @@ class _BuyPackageScreenState extends ConsumerState<BuyPackageScreen> {
                   ),
                 ),
 
-                // Pay Button
                 Padding(
                   padding: const EdgeInsets.all(AppConstants.screenPadding),
                   child: SizedBox(
                     width: double.infinity,
                     height: AppConstants.financialButtonHeight,
                     child: ElevatedButton(
-                      onPressed: loading || _selectedPackageId == null ? null : _submit,
+                      onPressed: loading || _selectedPackageIds.isEmpty ? null : _submit,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: _selectedPackageId == null
+                        backgroundColor: _selectedPackageIds.isEmpty
                             ? context.appDividerColor
                             : AppTheme.primary,
                         shape: RoundedRectangleBorder(
@@ -271,17 +363,15 @@ class _BuyPackageScreenState extends ConsumerState<BuyPackageScreen> {
                       child: loading
                           ? const CircularProgressIndicator(color: AppTheme.black)
                           : Text(
-                              _selectedPackageId == null
+                              _selectedPackageIds.isEmpty
                                   ? l10n.buyPackageSubmitButton
-                                  : l10n.buyPackagePayWithRial(
-                                      AmountFormatter.toTomanNaked(
-                                        packages
-                                            .firstWhere((p) => p.id == _selectedPackageId)
-                                            .price,
-                                      ),
-                                    ),
+                                  : (gatewayPart > 0
+                                        ? l10n.buyPackagePayWithRial(
+                                            AmountFormatter.toTomanNaked(gatewayPart),
+                                          )
+                                        : l10n.payButton),
                               style: TextStyle(
-                                color: _selectedPackageId == null
+                                color: _selectedPackageIds.isEmpty
                                     ? context.textTertiaryColor
                                     : AppTheme.black,
                                 fontSize: 16,

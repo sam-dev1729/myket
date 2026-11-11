@@ -508,5 +508,11 @@
       }
     }
   },
-  "addNewItemTooltip": "افزودن مورد جدید"
+  "addNewItemTooltip": "افزودن مورد جدید",
+  "statusSuccess": "موفق",
+  "statusPending": "در انتظار",
+  "statusFailed": "ناموفق",
+  "statusCancelled": "لغو شده",
+  "expiryDateLabel": "تاریخ انقضا",
+  "purchaseDateLabel": "تاریخ خرید"
 }

@@ -90,9 +90,11 @@ void main() {
       addTearDown(container.dispose);
 
       container.read(buyPackageControllerProvider);
+
+      // 👈 اصلاح شد: استفاده از packageIds به جای packageId
       await container
           .read(buyPackageControllerProvider.notifier)
-          .submit(packageId: 'p1', useWallet: true);
+          .submit(packageIds: ['p1'], useWallet: true);
 
       final state = container.read(buyPackageControllerProvider);
       expect(state.status, BuyStatus.success);
@@ -114,7 +116,9 @@ void main() {
       addTearDown(container.dispose);
 
       container.read(buyPackageControllerProvider);
-      await container.read(buyPackageControllerProvider.notifier).submit(packageId: 'p1');
+
+      // 👈 اصلاح شد
+      await container.read(buyPackageControllerProvider.notifier).submit(packageIds: ['p1']);
 
       final state = container.read(buyPackageControllerProvider);
       expect(state.status, BuyStatus.pending);
@@ -122,15 +126,16 @@ void main() {
     });
 
     test('submit with unknown package → BuyStatus.error', () async {
-      // BuyPackageController delegates validation to the backend — there is
-      // no local "invalid package ID" no-op. We test the real behavior:
-      // the repository throws (PACKAGE_NOT_FOUND) and the controller errors.
       final fake = FakeFinancialRepository()..throwOnCreateOrder = Exception('PACKAGE_NOT_FOUND');
       final container = _container(fake);
       addTearDown(container.dispose);
 
       container.read(buyPackageControllerProvider);
-      await container.read(buyPackageControllerProvider.notifier).submit(packageId: 'unknown-id');
+
+      // 👈 اصلاح شد
+      await container
+          .read(buyPackageControllerProvider.notifier)
+          .submit(packageIds: ['unknown-id']);
 
       final state = container.read(buyPackageControllerProvider);
       expect(state.status, BuyStatus.error);
@@ -150,7 +155,10 @@ void main() {
       addTearDown(container.dispose);
 
       container.read(buyPackageControllerProvider);
-      await container.read(buyPackageControllerProvider.notifier).submit(packageId: 'p1');
+
+      // 👈 اصلاح شد
+      await container.read(buyPackageControllerProvider.notifier).submit(packageIds: ['p1']);
+
       expect(container.read(buyPackageControllerProvider).status, BuyStatus.success);
 
       container.read(buyPackageControllerProvider.notifier).reset();

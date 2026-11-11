@@ -2475,6 +2475,42 @@ abstract class AppLocalizations {
   /// In fa, this message translates to:
   /// **'افزودن مورد جدید'**
   String get addNewItemTooltip;
+
+  /// No description provided for @statusSuccess.
+  ///
+  /// In fa, this message translates to:
+  /// **'موفق'**
+  String get statusSuccess;
+
+  /// No description provided for @statusPending.
+  ///
+  /// In fa, this message translates to:
+  /// **'در انتظار'**
+  String get statusPending;
+
+  /// No description provided for @statusFailed.
+  ///
+  /// In fa, this message translates to:
+  /// **'ناموفق'**
+  String get statusFailed;
+
+  /// No description provided for @statusCancelled.
+  ///
+  /// In fa, this message translates to:
+  /// **'لغو شده'**
+  String get statusCancelled;
+
+  /// No description provided for @expiryDateLabel.
+  ///
+  /// In fa, this message translates to:
+  /// **'تاریخ انقضا'**
+  String get expiryDateLabel;
+
+  /// No description provided for @purchaseDateLabel.
+  ///
+  /// In fa, this message translates to:
+  /// **'تاریخ خرید'**
+  String get purchaseDateLabel;
 }
 
 class _AppLocalizationsDelegate

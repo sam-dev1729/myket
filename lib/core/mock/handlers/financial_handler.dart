@@ -194,8 +194,7 @@ class FinancialHandler extends MockHandler {
     final limit = _asInt(options.queryParameters['limit']) ?? 20;
 
     final list = List<UserPackageModel>.from(storage.userPackages[mobile] ?? [])
-      ..sort((a, b) => b.startsAt.compareTo(a.startsAt));
-
+      ..sort((a, b) => (b.startsAt ?? '').compareTo(a.startsAt ?? ''));
     final total = list.length;
     final totalPage = total == 0 ? 0 : ((total + limit - 1) ~/ limit);
     final start = (page - 1) * limit;

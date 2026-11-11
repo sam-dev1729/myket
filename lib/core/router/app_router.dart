@@ -34,6 +34,30 @@ import '../constants/app_constants.dart';
 /// Global application router using [GoRouter].
 final appRouter = GoRouter(
   initialLocation: AppConstants.splashRoute,
+    redirect: (context, state) {
+    final uri = state.uri;
+    
+    // اگر لینک از نوع دیپ‌لینک پرداخت بود
+    if (uri.scheme == AppConstants.deepLinkScheme) {
+      if (uri.host == AppConstants.deepLinkPaymentHost) {
+        String status = AppConstants.paymentStatusPending;
+        
+        // استخراج وضعیت از آدرس (مثلاً medicmetaverse://payment/status/success)
+        if (uri.pathSegments.length >= 2 &&
+            uri.pathSegments.first == AppConstants.deepLinkStatusSegment) {
+          status = uri.pathSegments[1];
+        } else if (uri.pathSegments.length == 1) {
+          status = uri.pathSegments.first;
+        }
+        
+        // تبدیل به مسیر داخلی و ریدایرکت به آن
+        return AppConstants.paymentStatusRouteTemplate.replaceFirst(':status', status);
+      }
+    }
+    
+    // در غیر این صورت هیچ ریدایرکتی لازم نیست
+    return null; 
+  },
   routes: [
     GoRoute(path: AppConstants.splashRoute, builder: (_, _) => const SplashScreen()),
     GoRoute(path: AppConstants.loginRoute, builder: (_, _) => const LoginScreen()),

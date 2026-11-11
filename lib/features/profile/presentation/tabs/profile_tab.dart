@@ -9,7 +9,9 @@ import '../../../../core/theme/theme_extensions.dart';
 import '../../../../core/widgets/trailing_arrow.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/auth_controller.dart';
+import '../../../financial/data/models/package_models.dart';
 import '../../../financial/data/models/wallet_models.dart';
+import '../../../financial/presentation/package_controller.dart';
 import '../../../financial/presentation/wallet_controller.dart';
 import '../../../financial/presentation/widgets/amount_formatter.dart';
 import '../../data/models/user_profile.dart';
@@ -26,6 +28,7 @@ class ProfileTab extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final walletAsync = ref.watch(walletControllerProvider);
     final profileAsync = ref.watch(profileControllerProvider);
+    final activePackagesAsync = ref.watch(activeUserPackagesProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -51,8 +54,8 @@ class ProfileTab extends ConsumerWidget {
                   const SizedBox(height: AppConstants.paddingMedium),
 
                   // ─── Account Status Card ───
-                                    // ─── Account Status Card ───
                   _AccountStatusCard(
+                    activePackagesAsync: activePackagesAsync,
                     onPackageHistoryTap: () => context.push(AppConstants.packageHistoryRoute),
                     onBuyPackageTap: () => context.push(AppConstants.packagesRoute),
                   ),
@@ -294,10 +297,15 @@ class _PersonalRow extends StatelessWidget {
 
 /// Account status card showing user level and package shortcuts.
 class _AccountStatusCard extends StatelessWidget {
+  final AsyncValue<List<UserPackageModel>> activePackagesAsync;
   final VoidCallback onPackageHistoryTap;
   final VoidCallback onBuyPackageTap;
 
-  const _AccountStatusCard({required this.onPackageHistoryTap, required this.onBuyPackageTap});
+  const _AccountStatusCard({
+    required this.activePackagesAsync,
+    required this.onPackageHistoryTap,
+    required this.onBuyPackageTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -332,11 +340,63 @@ class _AccountStatusCard extends StatelessWidget {
             style: TextStyle(fontSize: 14, color: context.textSecondaryColor),
           ),
           const SizedBox(height: AppConstants.paddingTiny),
-          Text(
-            l10n.activePackages,
-            textAlign: TextAlign.start,
-            style: TextStyle(fontSize: 14, color: context.textSecondaryColor),
+
+          // ─── نمایش لیست بسته‌های فعال ───
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.activePackages,
+                textAlign: TextAlign.start,
+                style: TextStyle(fontSize: 14, color: context.textSecondaryColor),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: activePackagesAsync.when(
+                  loading: () => const SizedBox(
+                    height: 14,
+                    width: 14,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                  error: (_, __) => Text(
+                    l10n.noData,
+                    style: TextStyle(fontSize: 12, color: context.textTertiaryColor),
+                  ),
+                  data: (packages) {
+                    if (packages.isEmpty) {
+                      return Text(
+                        l10n.noData,
+                        style: TextStyle(fontSize: 12, color: context.textTertiaryColor),
+                      );
+                    }
+                    return Wrap(
+                      spacing: 4,
+                      runSpacing: 4,
+                      children: packages.map((p) {
+                        final title = p.package?.title ?? l10n.noData;
+                        return Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppTheme.primary.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(AppConstants.pillRadius),
+                          ),
+                          child: Text(
+                            title,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.primary,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
+
           const SizedBox(height: AppConstants.paddingMedium),
           _ArrowLinkTile(title: l10n.packageHistory, onTap: onPackageHistoryTap),
           _ArrowLinkTile(title: l10n.buyPackageTitle, onTap: onBuyPackageTap),

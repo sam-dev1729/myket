@@ -89,6 +89,8 @@ class _BlogPostBody extends StatelessWidget {
                 child: CachedNetworkImage(
                   imageUrl: post.featuredImageUrl!,
                   fit: BoxFit.cover,
+                  // 👇 بهینه‌سازی تصویر کاور
+                  memCacheWidth: 1200,
                   placeholder: (_, __) => Container(color: context.surfaceVariantColor),
                   errorWidget: (_, __, ___) => Container(
                     color: context.surfaceVariantColor,

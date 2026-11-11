@@ -87,8 +87,7 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
                     vertical: AppConstants.paddingSmall,
                   ),
                   itemCount: categories.length + 1,
-                  separatorBuilder: (_, __) =>
-                      const SizedBox(width: AppConstants.paddingSmall),
+                  separatorBuilder: (_, __) => const SizedBox(width: AppConstants.paddingSmall),
                   itemBuilder: (context, index) {
                     // Index 0 = "All" chip.
                     final isAll = index == 0;
@@ -102,7 +101,6 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
                       selected: isSelected,
                       onSelected: (_) {
                         ref.read(selectedBlogCategoryProvider.notifier).select(id);
-
                       },
                       selectedColor: AppTheme.primary.withValues(alpha: 0.2),
                       labelStyle: TextStyle(
@@ -132,9 +130,7 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
                   if (data.items.isEmpty) {
                     return Center(
                       child: Text(
-                        selectedCategory == null
-                            ? l10n.blogPostEmpty
-                            : l10n.blogCategoryEmpty,
+                        selectedCategory == null ? l10n.blogPostEmpty : l10n.blogCategoryEmpty,
                         style: TextStyle(color: context.textSecondaryColor),
                       ),
                     );
@@ -161,8 +157,10 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
                         return _BlogPostCard(
                           post: post,
                           onTap: () => context.push(
-                            AppConstants.blogDetailRouteTemplate
-                                .replaceFirst(':id', post.id.toString()),
+                            AppConstants.blogDetailRouteTemplate.replaceFirst(
+                              ':id',
+                              post.id.toString(),
+                            ),
                           ),
                         );
                       },
@@ -205,14 +203,18 @@ class _BlogPostCard extends StatelessWidget {
                 child: CachedNetworkImage(
                   imageUrl: post.featuredImageUrl!,
                   fit: BoxFit.cover,
+                  // 👇 بهینه‌سازی: کاهش سایز تصویر در حافظه برای جلوگیری از لگ
+                  memCacheWidth: 800,
                   placeholder: (_, __) => Container(
                     color: context.surfaceVariantColor,
-                    child: const Center(child: CircularProgressIndicator()),
+                    child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
                   ),
                   errorWidget: (_, __, ___) => Container(
                     color: context.surfaceVariantColor,
-                    child: Icon(Icons.image_not_supported_outlined,
-                        color: context.textTertiaryColor),
+                    child: Icon(
+                      Icons.image_not_supported_outlined,
+                      color: context.textTertiaryColor,
+                    ),
                   ),
                 ),
               ),
@@ -245,8 +247,7 @@ class _BlogPostCard extends StatelessWidget {
                           )
                           .toList(),
                     ),
-                  if (post.categories.isNotEmpty)
-                    const SizedBox(height: AppConstants.paddingSmall),
+                  if (post.categories.isNotEmpty) const SizedBox(height: AppConstants.paddingSmall),
                   Text(
                     post.title,
                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),

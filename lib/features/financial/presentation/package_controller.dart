@@ -65,27 +65,28 @@ enum BuyStatus {
 
 /// State model for [BuyPackageController].
 class BuyPackageState {
-  /// Current status of the buy-package flow.
   final BuyStatus status;
-
-  /// Response body when [status] is [BuyStatus.pending] or [BuyStatus.success].
-  final CreateOrderResponse? response;
-
-  /// Error message when [status] is [BuyStatus.error].
+  final CreateOrderResponse? response; // برای خرید تکی
+  final CreateMultiOrderResponse? multiResponse; // برای خرید چندگانه
   final String? errorMessage;
 
-  /// Creates a [BuyPackageState] instance.
-  const BuyPackageState({this.status = BuyStatus.idle, this.response, this.errorMessage});
+  const BuyPackageState({
+    this.status = BuyStatus.idle,
+    this.response,
+    this.multiResponse,
+    this.errorMessage,
+  });
 
-  /// Returns a copy of this state with selected fields replaced.
   BuyPackageState copyWith({
     BuyStatus? status,
     CreateOrderResponse? response,
+    CreateMultiOrderResponse? multiResponse,
     String? errorMessage,
   }) {
     return BuyPackageState(
       status: status ?? this.status,
       response: response ?? this.response,
+      multiResponse: multiResponse ?? this.multiResponse,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
@@ -93,47 +94,67 @@ class BuyPackageState {
 
 /// Controller that manages the buy-package flow.
 class BuyPackageController extends Notifier<BuyPackageState> {
-  /// Initial state.
   @override
   BuyPackageState build() => const BuyPackageState();
 
-  /// Submits a create-order request.
+  /// Submits an order (single or multi).
   Future<void> submit({
-    required String packageId,
+    required List<String> packageIds,
     String? discountCode,
     bool useWallet = false,
     String? gateway,
   }) async {
     state = const BuyPackageState(status: BuyStatus.loading);
     try {
-      final res = await ref
-          .read(financialRepositoryProvider)
-          .createOrder(
-            packageId: packageId,
-            discountCode: discountCode,
-            useWallet: useWallet,
-            gateway: gateway,
-          );
-
-      final needsGateway =
-          res.status == AppConstants.statusPending && (res.gatewayUrl?.isNotEmpty ?? false);
-      state = state.copyWith(
-        status: needsGateway ? BuyStatus.pending : BuyStatus.success,
-        response: res,
-      );
-
-      if (!needsGateway) {
-        await ref.read(walletControllerProvider.notifier).refresh();
-        ref.invalidate(activeUserPackagesProvider);
+      if (packageIds.length == 1) {
+        // خرید تکی
+        final res = await ref
+            .read(financialRepositoryProvider)
+            .createOrder(
+              packageId: packageIds.first,
+              discountCode: discountCode,
+              useWallet: useWallet,
+              gateway: gateway,
+            );
+        final needsGateway =
+            res.status == AppConstants.statusPending && (res.gatewayUrl?.isNotEmpty ?? false);
+        state = state.copyWith(
+          status: needsGateway ? BuyStatus.pending : BuyStatus.success,
+          response: res,
+        );
+        if (!needsGateway) {
+          await ref.read(walletControllerProvider.notifier).refresh();
+          ref.invalidate(activeUserPackagesProvider);
+        }
+      } else {
+        // خرید چندگانه
+        final res = await ref
+            .read(financialRepositoryProvider)
+            .createMultiOrder(
+              packageIds: packageIds,
+              discountCode: discountCode,
+              useWallet: useWallet,
+              gateway: gateway,
+            );
+        final needsGateway =
+            res.status == AppConstants.statusPending && (res.gatewayUrl?.isNotEmpty ?? false);
+        state = state.copyWith(
+          status: needsGateway ? BuyStatus.pending : BuyStatus.success,
+          multiResponse: res,
+        );
+        if (!needsGateway) {
+          await ref.read(walletControllerProvider.notifier).refresh();
+          ref.invalidate(activeUserPackagesProvider);
+        }
       }
     } catch (e) {
       state = state.copyWith(status: BuyStatus.error, errorMessage: e.toString());
     }
   }
 
-  /// Resets the buy-package state to idle.
   void reset() => state = const BuyPackageState();
 }
+
 
 /// Riverpod provider for [BuyPackageController].
 final buyPackageControllerProvider = NotifierProvider<BuyPackageController, BuyPackageState>(

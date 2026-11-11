@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_theme.dart';
@@ -85,6 +86,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
 }
 
 /// A single transaction row for the history list.
+/// A single transaction row for the history list.
 class _TransactionRow extends StatelessWidget {
   /// Transaction to display.
   final WalletTransactionModel tx;
@@ -123,7 +125,7 @@ class _TransactionRow extends StatelessWidget {
                 Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 2),
                 Text(
-                  _formatDate(tx.createdAt),
+                  _formatDate(context, tx.createdAt),
                   style: TextStyle(color: context.textSecondaryColor, fontSize: 12),
                 ),
               ],
@@ -138,7 +140,10 @@ class _TransactionRow extends StatelessWidget {
                 style: TextStyle(color: color, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 2),
-              Text(tx.status, style: TextStyle(fontSize: 11, color: context.textSecondaryColor)),
+              Text(
+                _localizedStatus(context, tx.status), // 👈 وضعیت فارسی شد
+                style: TextStyle(fontSize: 11, color: context.textSecondaryColor),
+              ),
             ],
           ),
         ],
@@ -146,10 +151,38 @@ class _TransactionRow extends StatelessWidget {
     );
   }
 
-  /// Formats an ISO date string into a localized date.
-  String _formatDate(String iso) {
+  /// Maps the transaction status string to a localized string.
+  String _localizedStatus(BuildContext context, String status) {
+    switch (status.toUpperCase()) {
+      case 'SUCCESS':
+        return l10n.statusSuccess;
+      case 'PENDING':
+        return l10n.statusPending;
+      case 'FAILED':
+        return l10n.statusFailed;
+      case 'CANCELLED':
+        return l10n.statusCancelled;
+      default:
+        return status;
+    }
+  }
+
+  /// Formats an ISO date string into a localized date (Jalali if fa).
+  String _formatDate(BuildContext context, String iso) {
+    if (iso.isEmpty) return iso;
     try {
-      return DateFormat('yyyy/MM/dd HH:mm').format(DateTime.parse(iso).toLocal());
+      final dt = DateTime.parse(iso).toLocal();
+
+      if (Localizations.localeOf(context).languageCode == 'fa') {
+        final j = Jalali.fromDateTime(dt);
+        final month = j.month.toString().padLeft(2, '0');
+        final day = j.day.toString().padLeft(2, '0');
+        final hour = dt.hour.toString().padLeft(2, '0');
+        final minute = dt.minute.toString().padLeft(2, '0');
+        return '${j.year}/$month/$day $hour:$minute';
+      }
+
+      return DateFormat('yyyy/MM/dd HH:mm').format(dt);
     } catch (_) {
       return iso;
     }

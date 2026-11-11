@@ -60,4 +60,11 @@ abstract class FinancialApi {
   /// Returns the up/down status of each payment gateway.
   @GET(AppConstants.gatewayStatusEndpoint)
   Future<ApiResponse<GatewayStatusModel>> getGatewayStatus();
+
+    /// Creates a multi-package order (one payment).
+  @POST(AppConstants.orderCreateMultiEndpoint)
+  Future<ApiResponse<CreateMultiOrderResponse>> createMultiOrder(
+    @Body() CreateMultiOrderRequest request,
+  );
+  
 }

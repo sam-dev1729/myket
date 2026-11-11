@@ -1,21 +1,26 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../../core/widgets/trailing_arrow.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../blog/data/wordpress_models.dart';
+import '../../../blog/presentation/blog_controller.dart';
 
 /// The home tab showing the two main diagnostic features (blood & urine,
 /// genetic) plus a preview of the latest blog posts.
-class HomeTab extends StatelessWidget {
-  /// Creates a [HomeTab] instance.
+class HomeTab extends ConsumerWidget {
   const HomeTab({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final postsAsync = ref.watch(blogPostsControllerProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -63,25 +68,46 @@ class HomeTab extends StatelessWidget {
                     const SizedBox(height: AppConstants.paddingXLarge),
                     _SectionTitle(title: l10n.blog, alignment: Alignment.centerRight),
                     const SizedBox(height: AppConstants.paddingMedium),
-                    _BlogCard(
-                      title: 'تشخیص داروی شیمی درمانی موثر برای مبتلایان به سرطان',
-                      date: '',
-                      tags: '',
-                      description: 'جدیدترین مقالات سلامت را در وبلاگ مدیک متاورس ببینید.',
-                      imageColor: AppTheme.info,
-                      onTap: () => context.push(AppConstants.blogListRoute),
-                    ),
-                    const SizedBox(height: AppConstants.paddingMedium),
-                    _BlogCard(
-                      title: 'آخرین یافته‌های علمی در حوزه سلامت',
-                      date: '',
-                      tags: '',
-                      description: 'برای مشاهده همه مطالب روی این کارت بزنید.',
-                      imageColor: AppTheme.warning,
-                      onTap: () => context.push(AppConstants.blogListRoute),
-                    ),
-                    const SizedBox(height: AppConstants.paddingLarge),
 
+                    // 👇 نمایش داینامیک مطالب بلاگ با اسکلتون لودینگ
+                    postsAsync.when(
+                      loading: () =>
+                          const Column(children: [_SkeletonBlogCard(), _SkeletonBlogCard()]),
+                      error: (e, _) => Center(
+                        child: Text(
+                          l10n.blogLoadMoreFailed,
+                          style: TextStyle(color: context.textSecondaryColor),
+                        ),
+                      ),
+                      data: (data) {
+                        if (data.items.isEmpty) {
+                          return Center(
+                            child: Text(
+                              l10n.blogPostEmpty,
+                              style: TextStyle(color: context.textSecondaryColor),
+                            ),
+                          );
+                        }
+
+                        final latestPosts = data.items.take(2).toList();
+
+                        return Column(
+                          children: latestPosts.map((post) {
+                            return _BlogCard(
+                              post: post,
+                              onTap: () => context.push(
+                                AppConstants.blogDetailRouteTemplate.replaceFirst(
+                                  ':id',
+                                  post.id.toString(),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: AppConstants.paddingLarge),
                     _SeeAllRow(
                       label: l10n.seeAllPosts,
                       onTap: () => context.push(AppConstants.blogListRoute),
@@ -97,21 +123,16 @@ class HomeTab extends StatelessWidget {
     );
   }
 
-  /// Displays a "coming soon" snackbar for placeholder features.
   void _showComingSoon(BuildContext context, AppLocalizations l10n) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.comingSoon)));
   }
 }
 
-/// The top icon bar of the home tab.
+/// ... (کلاس‌های _TopIconBar, _CircleIconButton, _FeatureCard, _SeeAllRow, _SectionTitle بدون تغییر هستند) ...
+
 class _TopIconBar extends StatelessWidget {
-  /// Called when the notifications icon is tapped.
   final VoidCallback onNotificationsTap;
-
-  /// Called when the support icon is tapped.
   final VoidCallback onSupportTap;
-
-  /// Called when the settings icon is tapped.
   final VoidCallback onSettingsTap;
 
   const _TopIconBar({
@@ -144,15 +165,9 @@ class _TopIconBar extends StatelessWidget {
   }
 }
 
-/// A round icon button with an optional notification badge.
 class _CircleIconButton extends StatelessWidget {
-  /// The icon to display.
   final IconData icon;
-
-  /// Called when the button is tapped.
   final VoidCallback onTap;
-
-  /// Whether to display a small red badge in the top-end corner.
   final bool showBadge;
 
   const _CircleIconButton({required this.icon, required this.onTap, this.showBadge = false});
@@ -188,30 +203,14 @@ class _CircleIconButton extends StatelessWidget {
   }
 }
 
-/// A large feature card.
 class _FeatureCard extends StatelessWidget {
-  /// Card title.
   final String title;
-
-  /// Card subtitle.
   final String subtitle;
-
-  /// Leading icon (currently unused but kept for future expansion).
   final IconData icon;
-
-  /// Accent color for the icon container.
   final Color iconColor;
-
-  /// Card background color.
   final Color backgroundColor;
-
-  /// Card border color.
   final Color borderColor;
-
-  /// Whether the feature is currently active.
   final bool isActive;
-
-  /// Called when the card is tapped.
   final VoidCallback onTap;
 
   const _FeatureCard({
@@ -238,7 +237,6 @@ class _FeatureCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Trailing arrow (left in RTL, right in LTR).
             TrailingArrow(color: context.iconColor, size: 20),
             const SizedBox(width: AppConstants.paddingMedium),
             Expanded(
@@ -281,12 +279,8 @@ class _FeatureCard extends StatelessWidget {
   }
 }
 
-/// A right-aligned "see all" link using [TrailingArrow].
 class _SeeAllRow extends StatelessWidget {
-  /// Text to display.
   final String label;
-
-  /// Called when the row is tapped.
   final VoidCallback onTap;
 
   const _SeeAllRow({required this.label, required this.onTap});
@@ -312,12 +306,8 @@ class _SeeAllRow extends StatelessWidget {
   }
 }
 
-/// A right-aligned section title.
 class _SectionTitle extends StatelessWidget {
-  /// Text to display.
   final String title;
-
-  /// Alignment of the title within its parent.
   final Alignment alignment;
 
   const _SectionTitle({required this.title, required this.alignment});
@@ -338,28 +328,19 @@ class _SectionTitle extends StatelessWidget {
   }
 }
 
+/// A blog post card that displays real data from the WordPress API.
 class _BlogCard extends StatelessWidget {
-  final String title;
-  final String date;
-  final String tags;
-  final String description;
-  final Color imageColor;
+  final BlogPost post;
   final VoidCallback onTap;
 
-  const _BlogCard({
-    required this.title,
-    required this.date,
-    required this.tags,
-    required this.description,
-    required this.imageColor,
-    required this.onTap,
-  });
+  const _BlogCard({required this.post, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        margin: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
         padding: const EdgeInsets.all(AppConstants.paddingMedium),
         decoration: BoxDecoration(
           color: context.surfaceColor,
@@ -373,10 +354,25 @@ class _BlogCard extends StatelessWidget {
               width: AppConstants.blogCardImageSize,
               height: AppConstants.blogCardImageSize,
               decoration: BoxDecoration(
-                color: imageColor.withValues(alpha: 0.15),
+                color: context.surfaceVariantColor,
                 borderRadius: BorderRadius.circular(AppConstants.borderRadius),
               ),
-              child: Icon(Icons.image_outlined, color: imageColor, size: 32),
+              clipBehavior: Clip.antiAlias,
+
+              child: post.featuredImageUrl != null
+                  ? CachedNetworkImage(
+                      imageUrl: post.featuredImageUrl!,
+                      fit: BoxFit.cover,
+                      memCacheWidth: 300, // بهینه‌سازی
+                      fadeInDuration: const Duration(milliseconds: 400),
+                      fadeOutDuration: const Duration(milliseconds: 400),
+                      placeholder: (_, _) => Container(color: context.surfaceVariantColor),
+                      errorWidget: (_, _, _) => Icon(
+                        Icons.image_not_supported_outlined,
+                        color: context.textTertiaryColor,
+                      ),
+                    )
+                  : Icon(Icons.article_outlined, color: context.textTertiaryColor, size: 32),
             ),
             const SizedBox(width: AppConstants.paddingMedium),
             Expanded(
@@ -384,7 +380,7 @@ class _BlogCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    title,
+                    post.title,
                     textAlign: TextAlign.right,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -396,12 +392,12 @@ class _BlogCard extends StatelessWidget {
                   ),
                   const SizedBox(height: AppConstants.paddingTiny),
                   Text(
-                    '$date . $tags',
+                    _formatDate(post.date),
                     style: TextStyle(color: context.textTertiaryColor, fontSize: 11),
                   ),
                   const SizedBox(height: AppConstants.paddingSmall),
                   Text(
-                    description,
+                    post.excerpt,
                     textAlign: TextAlign.right,
                     style: TextStyle(color: context.textSecondaryColor, fontSize: 12),
                     maxLines: 2,
@@ -412,6 +408,102 @@ class _BlogCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  String _formatDate(String iso) {
+    try {
+      final dt = DateTime.parse(iso);
+      final j = Jalali.fromDateTime(dt);
+      return '${j.day} ${j.formatter.mN} ${j.year}';
+    } catch (_) {
+      return iso;
+    }
+  }
+}
+
+/// 👇 اسکلتون لودینگ با انیمیشن پالسی (Pulse) برای حالت لودینگ
+class _SkeletonBlogCard extends StatefulWidget {
+  const _SkeletonBlogCard();
+
+  @override
+  State<_SkeletonBlogCard> createState() => _SkeletonBlogCardState();
+}
+
+class _SkeletonBlogCardState extends State<_SkeletonBlogCard> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000))
+      ..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
+      padding: const EdgeInsets.all(AppConstants.paddingMedium),
+      decoration: BoxDecoration(
+        color: context.surfaceColor,
+        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        border: Border.all(color: context.appDividerColor),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return Container(
+                width: AppConstants.blogCardImageSize,
+                height: AppConstants.blogCardImageSize,
+                decoration: BoxDecoration(
+                  color: context.surfaceVariantColor.withValues(
+                    alpha: 0.5 + (_controller.value * 0.5),
+                  ),
+                  borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+                ),
+              );
+            },
+          ),
+          const SizedBox(width: AppConstants.paddingMedium),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) {
+                    final color = context.surfaceVariantColor.withValues(
+                      alpha: 0.5 + (_controller.value * 0.5),
+                    );
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(height: 16, width: double.infinity, color: color),
+                        const SizedBox(height: 8),
+                        Container(height: 16, width: 150, color: color),
+                        const SizedBox(height: 8),
+                        Container(height: 12, width: 80, color: color),
+                        const SizedBox(height: 8),
+                        Container(height: 12, width: double.infinity, color: color),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

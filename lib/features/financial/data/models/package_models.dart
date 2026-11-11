@@ -101,23 +101,21 @@ class UserPackageModel {
   final String id;
 
   /// Identifier of the owning user.
-  @JsonKey(name: 'user_id')
-  final String userId;
+  final String? userId;
 
   /// Identifier of the purchased package.
-  @JsonKey(name: 'package_id')
-  final String packageId;
+  final String? packageId;
 
   /// Status string (`ACTIVE`, `EXPIRED`, `CANCELLED`).
-  final String status;
+  final String? status;
 
   /// ISO-8601 timestamp when the entitlement starts.
-  @JsonKey(name: 'starts_at')
-  final String startsAt;
+  @JsonKey(name: 'startsAt')
+  final String? startsAt;
 
   /// ISO-8601 timestamp when the entitlement expires.
-  @JsonKey(name: 'expires_at')
-  final String expiresAt;
+  @JsonKey(name: 'expiresAt')
+  final String? expiresAt;
 
   /// Optional embedded package summary.
   final PackageSummaryModel? package;
@@ -125,11 +123,11 @@ class UserPackageModel {
   /// Creates a [UserPackageModel] instance.
   const UserPackageModel({
     required this.id,
-    required this.userId,
-    required this.packageId,
-    required this.status,
-    required this.startsAt,
-    required this.expiresAt,
+    this.userId,
+    this.packageId,
+    this.status,
+    this.startsAt,
+    this.expiresAt,
     this.package,
   });
 
@@ -233,6 +231,66 @@ class CreateOrderResponse {
 
   /// Serializes this [CreateOrderResponse] into a JSON map.
   Map<String, dynamic> toJson() => _$CreateOrderResponseToJson(this);
+}
+
+/// Request body for `POST /order/create-multi`.
+@JsonSerializable()
+class CreateMultiOrderRequest {
+  @JsonKey(name: 'package_ids')
+  final List<String> packageIds;
+
+  @JsonKey(name: 'discount_code', includeIfNull: false)
+  final String? discountCode;
+
+  @JsonKey(name: 'use_wallet', includeIfNull: false)
+  final bool? useWallet;
+
+  @JsonKey(name: 'payment_gateway', includeIfNull: false)
+  final String? paymentGateway;
+
+  const CreateMultiOrderRequest({
+    required this.packageIds,
+    this.discountCode,
+    this.useWallet,
+    this.paymentGateway,
+  });
+
+  Map<String, dynamic> toJson() => _$CreateMultiOrderRequestToJson(this);
+}
+
+/// Response body for `POST /order/create-multi`.
+@JsonSerializable()
+class CreateMultiOrderResponse {
+  @JsonKey(name: 'order_ids')
+  final List<String> orderIds;
+
+  @JsonKey(name: 'discount_amount')
+  final int discountAmount;
+
+  @JsonKey(name: 'wallet_amount')
+  final int walletAmount;
+
+  @JsonKey(name: 'gateway_amount')
+  final int gatewayAmount;
+
+  final String status;
+
+  @JsonKey(name: 'gateway_url')
+  final String? gatewayUrl;
+
+  const CreateMultiOrderResponse({
+    required this.orderIds,
+    required this.discountAmount,
+    required this.walletAmount,
+    required this.gatewayAmount,
+    required this.status,
+    this.gatewayUrl,
+  });
+
+  factory CreateMultiOrderResponse.fromJson(Map<String, dynamic> json) =>
+      _$CreateMultiOrderResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CreateMultiOrderResponseToJson(this);
 }
 
 /// Payment gateway up/down status returned by `GET /gateway/status`.

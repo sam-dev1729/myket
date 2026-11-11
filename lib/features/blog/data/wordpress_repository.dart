@@ -18,7 +18,6 @@ class WordPressRepository {
     int? categoryId,
   }) async {
     final response = await _dio.get<dynamic>(
-      // 👈 dynamic برای جلوگیری از کرش
       'posts',
       queryParameters: {
         'page': page,
@@ -26,7 +25,7 @@ class WordPressRepository {
         '_embed': 1,
         'orderby': 'date',
         'order': 'desc',
-        if (categoryId != null) 'categories': categoryId,
+        'categories': ?categoryId,
       },
       options: Options(validateStatus: (s) => s != null && s < 500),
     );
@@ -44,7 +43,6 @@ class WordPressRepository {
 
     final raw = response.data;
 
-    // 👈 چک کردن اینکه پاسخ واقعاً یک لیست است یا نه (مثلاً HTML نباشد)
     if (raw is! List) {
       debugPrint('WP Posts Error: Expected List, got ${raw.runtimeType}');
       debugPrint(
@@ -86,7 +84,6 @@ class WordPressRepository {
   /// Fetches all categories with at least one published post.
   Future<List<BlogCategory>> getCategories() async {
     final response = await _dio.get<dynamic>(
-      // 👈 dynamic
       'categories',
       queryParameters: {
         'per_page': AppConstants.blogCategoriesPerPage,
@@ -99,7 +96,7 @@ class WordPressRepository {
 
     if (raw is! List) {
       debugPrint('WP Categories Error: Expected List, got ${raw.runtimeType}');
-      return const []; // در صورت خطا، لیست خالی برگردان تا UI کرش نکند
+      return const [];
     }
 
     return raw.whereType<Map<String, dynamic>>().map(BlogCategory.fromJson).toList(growable: false);
@@ -116,7 +113,6 @@ class WordPressRepository {
 final wordpressDioProvider = Provider<Dio>((ref) {
   return Dio(
     BaseOptions(
-      // ⚠️ مطمئن شوید این آدرس دقیقاً درست است (احتمالاً باید /blog/ حذف شود)
       baseUrl: AppConstants.wordpressBaseUrl,
       connectTimeout: const Duration(seconds: AppConstants.apiTimeoutSeconds),
       receiveTimeout: const Duration(seconds: AppConstants.apiTimeoutSeconds),

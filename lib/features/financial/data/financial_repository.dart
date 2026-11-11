@@ -93,6 +93,25 @@ class FinancialRepository {
     if (!r.success) throw r.error!;
     return r.body!;
   }
+
+    /// Creates a multi-package order.
+  Future<CreateMultiOrderResponse> createMultiOrder({
+    required List<String> packageIds,
+    String? discountCode,
+    bool useWallet = false,
+    String? gateway,
+  }) async {
+    final r = await api.createMultiOrder(
+      CreateMultiOrderRequest(
+        packageIds: packageIds,
+        discountCode: discountCode,
+        useWallet: useWallet,
+        paymentGateway: gateway,
+      ),
+    );
+    if (!r.success) throw r.error!;
+    return r.body!;
+  }
 }
 
 /// Riverpod provider for [FinancialRepository].

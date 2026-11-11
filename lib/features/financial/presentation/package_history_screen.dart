@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_theme.dart';
@@ -191,12 +192,12 @@ class _PackageHistoryCard extends StatelessWidget {
           const SizedBox(height: AppConstants.paddingSmall),
           _InfoRow(
             icon: Icons.play_circle_outline,
-            label: _formatDate(item.startsAt),
+            label: '${l10n.purchaseDateLabel}: ${_formatDate(context, item.startsAt)}',
             valueColor: context.textSecondaryColor,
           ),
           _InfoRow(
             icon: Icons.stop_circle_outlined,
-            label: _formatDate(item.expiresAt),
+            label: '${l10n.expiryDateLabel}: ${_formatDate(context, item.expiresAt)}',
             valueColor: context.textSecondaryColor,
           ),
         ],
@@ -205,8 +206,8 @@ class _PackageHistoryCard extends StatelessWidget {
   }
 
   /// Resolves the status badge (color, localized label).
-  (Color, String) _statusStyle(BuildContext context, String status, AppLocalizations l10n) {
-    switch (status.toUpperCase()) {
+  (Color, String) _statusStyle(BuildContext context, String? status, AppLocalizations l10n) {
+    switch (status?.toUpperCase()) {
       case AppConstants.userPackageStatusActive:
         return (AppTheme.success, l10n.packageStatusActive);
       case AppConstants.userPackageStatusExpired:
@@ -214,14 +215,23 @@ class _PackageHistoryCard extends StatelessWidget {
       case AppConstants.userPackageStatusCancelled:
         return (AppTheme.error, l10n.packageStatusCancelled);
       default:
-        return (context.textTertiaryColor, status);
+        return (context.textTertiaryColor, l10n.noData);
     }
   }
 
-  /// Formats an ISO date string as `yyyy/MM/dd`, or returns it unchanged.
-  String _formatDate(String iso) {
+  /// Formats an ISO date string as a Jalali date if locale is fa.
+  String _formatDate(BuildContext context, String? iso) {
+    if (iso == null || iso.isEmpty) return l10n.noData;
     try {
       final dt = DateTime.parse(iso).toLocal();
+
+      if (Localizations.localeOf(context).languageCode == 'fa') {
+        final j = Jalali.fromDateTime(dt);
+        final month = j.month.toString().padLeft(2, '0');
+        final day = j.day.toString().padLeft(2, '0');
+        return '${j.year}/$month/$day';
+      }
+
       final y = dt.year.toString().padLeft(4, '0');
       final m = dt.month.toString().padLeft(2, '0');
       final d = dt.day.toString().padLeft(2, '0');
