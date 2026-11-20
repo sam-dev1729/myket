@@ -340,8 +340,12 @@ class AppConstants {
   // SharedPreferences Keys
   // ─────────────────────────────────────────────────────────────
 
-  /// Key used to persist the dark-mode preference.
+  /// Key used to persist the dark-mode preference (legacy, kept for
+  /// migration to [prefKeyTheme]).
   static const String prefKeyDarkMode = 'pref_dark_mode';
+
+  /// Key used to persist the selected app theme id.
+  static const String prefKeyTheme = 'pref_theme';
 
   /// Key used to persist the selected language code.
   static const String prefKeyLanguage = 'pref_language';
@@ -399,6 +403,25 @@ class AppConstants {
   static const double bottomSheetHeightFactor = 0.8;
   static const double notificationCardImageSize = 100.0;
   static const double blogCardImageSize = 100.0;
+
+  // ─────────────────────────────────────────────────────────────
+  // Theme Picker
+  // ─────────────────────────────────────────────────────────────
+
+  /// Width of the mini palette preview shown in the theme picker.
+  static const double themePreviewWidth = 56.0;
+
+  /// Height of the mini palette preview shown in the theme picker.
+  static const double themePreviewHeight = 52.0;
+
+  /// Diameter of the palette color dots inside the theme preview.
+  static const double themePreviewDotSize = 7.0;
+
+  /// Max width reserved for the selected theme name in Settings.
+  static const double themeNameMaxWidth = 160.0;
+
+  /// Duration of the highlight animation when a theme is selected.
+  static const Duration themeSelectAnimation = Duration(milliseconds: 180);
   
   // ─────────────────────────────────────────────────────────────
   // Border Widths (added in PKG-013-001 — Sprint 9.b)

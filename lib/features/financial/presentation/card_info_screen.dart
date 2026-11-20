@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_constants.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -102,15 +101,15 @@ class _CardInfoScreenState extends State<CardInfoScreen> {
                           context.pop();
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.primary,
+                          backgroundColor: context.colorScheme.primary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(AppConstants.pillRadius),
                           ),
                         ),
                         child: Text(
                           l10n.saveAndReturn,
-                          style: const TextStyle(
-                            color: AppTheme.black,
+                          style: TextStyle(
+                            color: context.colorScheme.onPrimary,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

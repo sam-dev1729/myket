@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:persian_calendar_widget/persian_calendar_widget.dart';
-import 'package:shamsi_date/shamsi_date.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_theme.dart';
@@ -72,6 +71,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   /// its name (and corrects the country) from the backend so the UI does
   /// not show a stale "not selected" state.
   Future<void> _prefillFromProfile(UserProfile profile) async {
+    // Resolve the locale before any await so the context is never used
+    // across an async gap.
+    final isPersian = Localizations.localeOf(context).languageCode == 'fa';
+
     setState(() {
       _heightController.text = profile.height?.toString() ?? '';
       _weightController.text = profile.weight?.toString() ?? '';
@@ -141,8 +144,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       try {
         final dt = DateTime.parse(profile.birthDate!);
         _selectedBirthDate = dt;
-        final locale = Localizations.localeOf(context);
-        if (locale.languageCode == 'fa') {
+        if (isPersian) {
           final j = Jalali.fromDateTime(dt);
           _displayBirthDate = '${j.day} ${j.formatter.mN} ${j.year}';
         } else {
@@ -552,27 +554,29 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               const SizedBox(height: AppConstants.paddingMedium),
 
               // Gender
-              Row(
-                children: [
-                  Expanded(
-                    child: RadioListTile<bool>(
-                      title: Text(l10n.male),
-                      value: true,
-                      groupValue: _isMale,
-                      activeColor: AppTheme.primary,
-                      onChanged: (v) => setState(() => _isMale = v),
+              RadioGroup<bool>(
+                groupValue: _isMale,
+                onChanged: (v) {
+                  if (v != null) setState(() => _isMale = v);
+                },
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: RadioListTile<bool>(
+                        title: Text(l10n.male),
+                        value: true,
+                        activeColor: context.colorScheme.primary,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: RadioListTile<bool>(
-                      title: Text(l10n.female),
-                      value: false,
-                      groupValue: _isMale,
-                      activeColor: AppTheme.primary,
-                      onChanged: (v) => setState(() => _isMale = v),
+                    Expanded(
+                      child: RadioListTile<bool>(
+                        title: Text(l10n.female),
+                        value: false,
+                        activeColor: context.colorScheme.primary,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               const SizedBox(height: AppConstants.paddingMedium),
 
@@ -614,7 +618,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   value: _isPregnant,
                   onChanged: (v) => setState(() => _isPregnant = v ?? false),
                   title: Text(l10n.isPregnantLabel),
-                  activeColor: AppTheme.primary,
+                  activeColor: context.colorScheme.primary,
                   controlAffinity: ListTileControlAffinity.leading,
                   contentPadding: EdgeInsets.zero,
                 ),
@@ -622,7 +626,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
               // Blood Type
               DropdownButtonFormField<String>(
-                value: _selectedBloodType,
+                initialValue: _selectedBloodType,
                 decoration: InputDecoration(
                   labelText: l10n.bloodTypeLabel,
                   border: OutlineInputBorder(
@@ -778,18 +782,18 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 child: ElevatedButton(
                   onPressed: isLoading ? null : _save,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primary,
+                    backgroundColor: context.colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppConstants.pillRadius),
                     ),
                   ),
                   child: isLoading
-                      ? const CircularProgressIndicator(color: AppTheme.black)
+                      ? CircularProgressIndicator(color: context.colorScheme.onPrimary)
                       : Text(
                           l10n.saveChanges,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
-                            color: AppTheme.black,
+                            color: context.colorScheme.onPrimary,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

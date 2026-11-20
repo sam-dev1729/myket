@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 510 860 1550">
+  <g id="heart">
+    <path d="M 520 908 L 520 858" fill="none" stroke="#8FA3AB" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 525 880 C 560 855 590 880 610 905 C 640 950 640 1010 605 1050 C 590 1065 570 1062 545 1040 C 515 1020 485 985 492 945 C 495 915 505 895 525 880 Z" fill="#C97C6F"/>
+    <path d="M 548 925 C 540 960 560 1000 590 1045" fill="none" stroke="#B5675B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 548 925 C 548 905 575 898 610 912 C 614 925 600 935 570 940 C 555 942 548 938 548 925 Z" fill="#8FA3AB"/>
+    <path d="M 510 920 C 505 925 506 940 514 944 L 520 925 Z" fill="#8FA3AB"/>
+    <path d="M 520 960 C 535 985 550 1000 565 1030" fill="none" stroke="#B5675B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 575 990 C 585 1005 590 1020 588 1040" fill="none" stroke="#B5675B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 600 940 C 615 960 622 985 618 1010" fill="none" stroke="#B5675B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

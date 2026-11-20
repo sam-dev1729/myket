@@ -113,7 +113,7 @@ class _LabOverviewScreenState extends ConsumerState<LabOverviewScreen> {
                       controller: _scrollController,
                       padding: const EdgeInsets.symmetric(horizontal: AppConstants.screenPadding),
                       itemCount: data.items.length + 1 + (data.hasMore ? 1 : 0),
-                      separatorBuilder: (_, __) =>
+                      separatorBuilder: (_, _) =>
                           const SizedBox(height: AppConstants.paddingSmall),
                       itemBuilder: (context, index) {
                         if (index == 0) {

@@ -49,9 +49,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   /// Handles the phone login button tap.
-  ///
-  /// If the terms checkbox is not checked, shows an inline error under the
-  /// checkbox and stops the flow. Otherwise, sends the OTP request.
   Future<void> _onLoginClicked() async {
     final l10n = AppLocalizations.of(context)!;
     final phone = _phoneController.text.trim();
@@ -135,188 +132,201 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final authState = ref.watch(authControllerProvider);
 
     return Scaffold(
-      backgroundColor: AppTheme.authBackground,
+      backgroundColor: context.scaffoldColor,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppConstants.screenPadding),
-          child: Column(
-            children: [
-              const Spacer(flex: 2),
-              const Icon(Icons.biotech, color: AppTheme.logoPurple, size: 80),
-              const SizedBox(height: AppConstants.paddingSmall),
-              Text(
-                l10n.appName,
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w300,
-                  color: AppTheme.logoPurple,
-                ),
-              ),
-              const SizedBox(height: AppConstants.paddingXLarge),
-
-              Text(
-                l10n.enterPhoneNumber,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: context.textPrimaryColor,
-                ),
-              ),
-              const SizedBox(height: AppConstants.paddingLarge),
-
-              // Phone Input Row (forced LTR so the country code is always
-              // on the left and the phone field on the right).
-              Row(
-                textDirection: TextDirection.ltr,
-                children: [
-                  Container(
-                    height: 55,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    decoration: BoxDecoration(
-                      color: context.surfaceColor,
-                      borderRadius: BorderRadius.circular(AppConstants.pillRadius),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              padding: const EdgeInsets.symmetric(horizontal: AppConstants.screenPadding),
+              child: ConstrainedBox(
+                // حداقل ارتفاع را برابر ارتفاع صفحه قرار می‌دهیم تا در حالت عادی صفحه پر شود
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Column(
+                  // 👈 به جای Spacer از MainAxisAlignment.center استفاده می‌کنیم
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Icon(Icons.biotech, color: context.colorScheme.secondary, size: 80),
+                    const SizedBox(height: AppConstants.paddingSmall),
+                    Text(
+                      l10n.appName,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w300,
+                        color: context.colorScheme.secondary,
+                      ),
                     ),
-                    child: Row(
+                    const SizedBox(height: AppConstants.paddingXLarge),
+
+                    Text(
+                      l10n.enterPhoneNumber,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: context.textPrimaryColor,
+                      ),
+                    ),
+                    const SizedBox(height: AppConstants.paddingLarge),
+
+                    // Phone Input Row (forced LTR)
+                    Row(
+                      textDirection: TextDirection.ltr,
                       children: [
-                        const Text("🇮🇷", style: TextStyle(fontSize: 20)),
-                        const SizedBox(width: 8),
-                        const Text("+98", style: TextStyle(fontWeight: FontWeight.bold)),
-                        const Icon(Icons.keyboard_arrow_down, size: 20),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Container(
-                      height: 55,
-                      decoration: BoxDecoration(
-                        color: context.surfaceColor,
-                        borderRadius: BorderRadius.circular(AppConstants.pillRadius),
-                      ),
-                      child: TextField(
-                        controller: _phoneController,
-                        keyboardType: TextInputType.phone,
-                        textDirection: TextDirection.ltr,
-                        textAlign: TextAlign.center,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(11),
-                        ],
-                        decoration: InputDecoration(
-                          hintText: l10n.loginPhonePlaceholder,
-                          hintStyle: TextStyle(color: context.textTertiaryColor),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(vertical: 18),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppConstants.paddingLarge),
-
-              Text(
-                l10n.or,
-                style: TextStyle(color: context.textSecondaryColor, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: AppConstants.paddingLarge),
-
-              // Google Login Button
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: OutlinedButton.icon(
-                  onPressed: authState.status == AuthStatus.loading ? null : _onGoogleLoginClicked,
-                  icon: const Icon(Icons.g_mobiledata, size: 32, color: AppTheme.info),
-                  label: Text(
-                    l10n.continueWithGoogle,
-                    style: TextStyle(fontSize: 16, color: context.textPrimaryColor),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: context.surfaceColor.withValues(alpha: 0.5),
-                    side: BorderSide(color: context.surfaceColor),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppConstants.pillRadius),
-                    ),
-                  ),
-                ),
-              ),
-
-              const Spacer(flex: 3),
-
-              // Terms acceptance checkbox + label.
-              // The checkbox sits on the right (default RTL behavior) and
-              // the label on the left. An inline error appears below the
-              // row when the user taps "Login" without accepting.
-              Row(
-                children: [
-                  Checkbox(
-                    value: _termsAccepted,
-                    onChanged: (value) {
-                      setState(() {
-                        _termsAccepted = value ?? false;
-                        if (_termsAccepted) _showTermsError = false;
-                      });
-                    },
-                    activeColor: AppTheme.logoPurple,
-                    checkColor: AppTheme.white,
-                    side: BorderSide(color: context.textSecondaryColor, width: 1.5),
-                  ),
-                  Expanded(
-                    child: Text(
-                      l10n.termsAcceptanceText,
-                      style: TextStyle(fontSize: 12, color: context.textSecondaryColor),
-                    ),
-                  ),
-                ],
-              ),
-              if (_showTermsError)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text(
-                    l10n.termsAcceptanceError,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: AppTheme.error,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              const SizedBox(height: AppConstants.paddingMedium),
-
-              // Submit Button
-              SizedBox(
-                width: double.infinity,
-                height: 60,
-                child: ElevatedButton(
-                  // The button is "clickable" whenever the phone is valid,
-                  // but the callback blocks the flow when terms are not
-                  // accepted (showing the inline error).
-                  onPressed: (!_isPhoneValid || authState.status == AuthStatus.loading)
-                      ? null
-                      : _onLoginClicked,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _isPhoneValid ? AppTheme.logoPurple : context.appDividerColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppConstants.pillRadius),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: authState.status == AuthStatus.loading
-                      ? const CircularProgressIndicator(color: AppTheme.white)
-                      : Text(
-                          l10n.loginOrSignupButton,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: _isPhoneValid ? AppTheme.white : context.textTertiaryColor,
-                            fontWeight: FontWeight.bold,
+                        Container(
+                          height: 55,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: context.surfaceColor,
+                            borderRadius: BorderRadius.circular(AppConstants.pillRadius),
+                          ),
+                          child: Row(
+                            children: [
+                              const Text("🇮🇷", style: TextStyle(fontSize: 20)),
+                              const SizedBox(width: 8),
+                              const Text("+98", style: TextStyle(fontWeight: FontWeight.bold)),
+                              const Icon(Icons.keyboard_arrow_down, size: 20),
+                            ],
                           ),
                         ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Container(
+                            height: 55,
+                            decoration: BoxDecoration(
+                              color: context.surfaceColor,
+                              borderRadius: BorderRadius.circular(AppConstants.pillRadius),
+                            ),
+                            child: TextField(
+                              controller: _phoneController,
+                              keyboardType: TextInputType.phone,
+                              textDirection: TextDirection.ltr,
+                              textAlign: TextAlign.center,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                LengthLimitingTextInputFormatter(11),
+                              ],
+                              decoration: InputDecoration(
+                                hintText: l10n.loginPhonePlaceholder,
+                                hintStyle: TextStyle(color: context.textTertiaryColor),
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.symmetric(vertical: 18),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: AppConstants.paddingLarge),
+
+                    Text(
+                      l10n.or,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: context.textSecondaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: AppConstants.paddingLarge),
+
+                    // Google Login Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 55,
+                      child: OutlinedButton.icon(
+                        onPressed: authState.status == AuthStatus.loading
+                            ? null
+                            : _onGoogleLoginClicked,
+                        icon: const Icon(Icons.g_mobiledata, size: 32, color: AppTheme.info),
+                        label: Text(
+                          l10n.continueWithGoogle,
+                          style: TextStyle(fontSize: 16, color: context.textPrimaryColor),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: context.surfaceColor.withValues(alpha: 0.5),
+                          side: BorderSide(color: context.surfaceColor),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppConstants.pillRadius),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: AppConstants.paddingXLarge), // جایگزین Spacer
+                    // Terms acceptance checkbox + label
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: _termsAccepted,
+                          onChanged: (value) {
+                            setState(() {
+                              _termsAccepted = value ?? false;
+                              if (_termsAccepted) _showTermsError = false;
+                            });
+                          },
+                          activeColor: context.colorScheme.secondary,
+                          checkColor: context.colorScheme.onSecondary,
+                          side: BorderSide(color: context.textSecondaryColor, width: 1.5),
+                        ),
+                        Expanded(
+                          child: Text(
+                            l10n.termsAcceptanceText,
+                            style: TextStyle(fontSize: 12, color: context.textSecondaryColor),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (_showTermsError)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          l10n.termsAcceptanceError,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppTheme.error,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: AppConstants.paddingMedium),
+
+                    // Submit Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 60,
+                      child: ElevatedButton(
+                        onPressed: (!_isPhoneValid || authState.status == AuthStatus.loading)
+                            ? null
+                            : _onLoginClicked,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _isPhoneValid
+                              ? context.colorScheme.secondary
+                              : context.appDividerColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppConstants.pillRadius),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: authState.status == AuthStatus.loading
+                            ? CircularProgressIndicator(color: context.colorScheme.onSecondary)
+                            : Text(
+                                l10n.loginOrSignupButton,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: _isPhoneValid ? context.colorScheme.onSecondary : context.textTertiaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                      ),
+                    ),
+                    const SizedBox(height: AppConstants.paddingLarge),
+                  ],
                 ),
               ),
-              const SizedBox(height: AppConstants.paddingLarge),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

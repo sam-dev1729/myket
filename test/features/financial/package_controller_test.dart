@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:myket/features/financial/data/financial_repository.dart';
 import 'package:myket/features/financial/data/models/package_models.dart';
-import 'package:myket/features/financial/data/models/wallet_models.dart';
 import 'package:myket/features/financial/presentation/package_controller.dart';
 
 import '../../helpers/test_channel_mocks.dart';

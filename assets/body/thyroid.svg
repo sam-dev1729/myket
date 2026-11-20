@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 510 860 1550">
+  <g id="thyroid">
+    <path d="M 541 795 C 528 782 511 786 508 802 C 506 818 521 828 533 822 C 539 816 541 806 541 795 Z" fill="#C8806A" stroke="#A46957" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M 541 795 C 554 782 571 786 574 802 C 576 818 561 828 549 822 C 543 816 541 806 541 795 Z" fill="#C8806A" stroke="#A46957" stroke-width="2" stroke-linejoin="round"/>
+    <rect x="534" y="803" width="14" height="9" rx="3" fill="#C8806A"/>
+  </g>
+</svg>

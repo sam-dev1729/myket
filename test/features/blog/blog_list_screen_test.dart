@@ -240,7 +240,7 @@ Widget _app(FakeWordPressRepository fake) {
   final router = GoRouter(
     initialLocation: '/blog',
     routes: [
-      GoRoute(path: '/blog', builder: (_, __) => const BlogListScreen()),
+      GoRoute(path: '/blog', builder: (_, _) => const BlogListScreen()),
       GoRoute(
         path: '/blog/:id',
         builder: (_, state) => Scaffold(

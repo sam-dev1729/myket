@@ -170,7 +170,7 @@ class ApiClient {
     } catch (_) {
       // Ignore storage errors
     } finally {
-      ref.read(sessionExpiredProvider.notifier).state = true;
+      ref.read(sessionExpiredProvider.notifier).expire();
     }
   }
 }

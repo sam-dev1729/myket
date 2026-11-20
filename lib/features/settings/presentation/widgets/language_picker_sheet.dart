@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/theme_extensions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/language_provider.dart';
 
@@ -160,7 +160,7 @@ class _LanguageTile extends StatelessWidget {
         selected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
         color: enabled
             ? (selected
-                ? AppTheme.primary
+                ? context.colorScheme.primary
                 : theme.colorScheme.onSurface.withValues(alpha: 0.5))
             : theme.colorScheme.onSurface.withValues(alpha: 0.3),
       ),
@@ -169,14 +169,14 @@ class _LanguageTile extends StatelessWidget {
           ? Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
-                color: AppTheme.primary.withValues(alpha: 0.15),
+                color: context.colorScheme.primary.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(AppConstants.pillRadius),
               ),
               child: Text(
                 comingSoonLabel!,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11,
-                  color: AppTheme.primary,
+                  color: context.colorScheme.primary,
                   fontWeight: FontWeight.bold,
                 ),
               ),

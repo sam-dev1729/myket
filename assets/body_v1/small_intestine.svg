@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 510 860 1550">
+  <g id="small_intestine">
+    <path d="M 492 1298 L 604 1298 C 616 1298 616 1318 604 1318 L 492 1318 C 480 1318 480 1338 492 1338 L 604 1338 C 616 1338 616 1358 604 1358 L 492 1358 C 480 1358 480 1378 492 1378 L 604 1378 C 616 1378 616 1396 604 1396 L 545 1396" fill="none" stroke="#EDB57A" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 492 1298 L 604 1298 C 616 1298 616 1318 604 1318 L 492 1318 C 480 1318 480 1338 492 1338 L 604 1338 C 616 1338 616 1358 604 1358 L 492 1358 C 480 1358 480 1378 492 1378 L 604 1378 C 616 1378 616 1396 604 1396 L 545 1396" fill="none" stroke="#DB9A57" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

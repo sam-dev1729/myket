@@ -80,7 +80,7 @@ final appRouter = GoRouter(
     ),
     GoRoute(path: AppConstants.mainRoute, builder: (_, _) => const MainScreen()),
     GoRoute(path: AppConstants.editProfileRoute, builder: (_, _) => const EditProfileScreen()),
-    GoRoute(path: AppConstants.personalInfoRoute, builder: (_, __) => const PersonalInfoScreen()),
+    GoRoute(path: AppConstants.personalInfoRoute, builder: (_, _) => const PersonalInfoScreen()),
     GoRoute(path: AppConstants.uploadLabTestRoute, builder: (_, _) => const UploadLabTestScreen()),
     GoRoute(path: AppConstants.notificationsRoute, builder: (_, _) => const NotificationsScreen()),
     GoRoute(path: AppConstants.supportRoute, builder: (_, _) => const SupportScreen()),

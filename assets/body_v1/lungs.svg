@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 510 860 1550">
+  <g id="lungs">
+    <path d="M 500 850 C 470 840 440 870 420 920 C 395 980 383 1040 390 1085 L 505 1090 C 510 1060 505 900 500 850 Z" fill="#E5ABAB"/>
+    <path d="M 585 850 C 620 840 660 880 680 940 C 698 1000 702 1050 698 1090 L 612 1085 C 600 1000 590 900 585 850 Z" fill="#E5ABAB"/>
+    <path d="M 505 905 C 470 945 430 995 395 1045" fill="none" stroke="#D29393" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 590 905 C 620 950 660 1000 695 1050" fill="none" stroke="#D29393" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 606 975 C 640 982 670 978 692 966" fill="none" stroke="#D29393" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 538 826 L 538 882" fill="none" stroke="#E6C4BC" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 538 826 L 538 882" fill="none" stroke="#D7A9A0" stroke-width="15" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="2 7"/>
+    <path d="M 538 882 C 520 895 490 915 470 942 C 462 955 455 965 450 985" fill="none" stroke="#E6C4BC" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 470 942 C 462 970 462 990 455 1020" fill="none" stroke="#E6C4BC" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 466 955 C 445 950 430 960 420 975" fill="none" stroke="#E6C4BC" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 538 882 C 560 895 590 915 612 942 C 622 955 630 965 636 985" fill="none" stroke="#E6C4BC" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 612 942 C 622 970 625 995 632 1025" fill="none" stroke="#E6C4BC" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 618 955 C 640 950 655 962 665 978" fill="none" stroke="#E6C4BC" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

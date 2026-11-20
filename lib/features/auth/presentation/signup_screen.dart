@@ -213,25 +213,27 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: RadioListTile<bool>(
-                        title: Text(l10n.male),
-                        value: true,
-                        groupValue: _isMale,
-                        onChanged: (v) => setState(() => _isMale = v),
+                RadioGroup<bool>(
+                  groupValue: _isMale,
+                  onChanged: (v) {
+                    if (v != null) setState(() => _isMale = v);
+                  },
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile<bool>(
+                          title: Text(l10n.male),
+                          value: true,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: RadioListTile<bool>(
-                        title: Text(l10n.female),
-                        value: false,
-                        groupValue: _isMale,
-                        onChanged: (v) => setState(() => _isMale = v),
+                      Expanded(
+                        child: RadioListTile<bool>(
+                          title: Text(l10n.female),
+                          value: false,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 32),
                 SizedBox(
@@ -240,16 +242,16 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   child: ElevatedButton(
                     onPressed: authState.status == AuthStatus.loading ? null : onRegisterClicked,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primary,
+                      backgroundColor: context.colorScheme.primary,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     child: authState.status == AuthStatus.loading
-                        ? const CircularProgressIndicator(color: Colors.white)
+                        ? CircularProgressIndicator(color: context.colorScheme.onPrimary)
                         : Text(
                             l10n.registerAndLogin,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 18,
-                              color: Colors.white,
+                              color: context.colorScheme.onPrimary,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

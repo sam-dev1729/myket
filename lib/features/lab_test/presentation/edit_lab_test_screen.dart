@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../core/utils/optional.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/lab_test_repository.dart';
@@ -258,9 +259,10 @@ class _EditLabTestScreenState extends ConsumerState<EditLabTestScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     // Convert ReorderableListView indices to category-list indices.
-    var o = oldIndex - 1;
-    var n = newIndex - 1;
-    if (o < n) n -= 1;
+    // `onReorderItem` already accounts for the removed item, so only the
+    // header offset has to be subtracted here.
+    final o = oldIndex - 1;
+    final n = newIndex - 1;
     if (o == n) return;
 
     final items = [...detail.categories];
@@ -292,10 +294,9 @@ class _EditLabTestScreenState extends ConsumerState<EditLabTestScreen> {
 
   /// Persists a parameter drag-and-drop reorder within [category].
   ///
-  /// Applies the standard [ReorderableListView] index adjustment
-  /// (`newIndex > oldIndex` → `newIndex -= 1`) and updates the
-  /// `sort_order` of every parameter whose position changed via
-  /// [UpdateLabTestParameterRequest.sortOrder].
+  /// `onReorderItem` already adjusts `newIndex` for the removed item, so the
+  /// new index can be used as-is. Updates the `sort_order` of every parameter
+  /// whose position changed via [UpdateLabTestParameterRequest.sortOrder].
   Future<void> _onReorderParameter(
     LabTestDetailCategory category,
     int oldIndex,
@@ -306,8 +307,8 @@ class _EditLabTestScreenState extends ConsumerState<EditLabTestScreen> {
 
     final l10n = AppLocalizations.of(context)!;
 
-    var n = newIndex;
-    if (oldIndex < n) n -= 1;
+    // `onReorderItem` already adjusts `newIndex` for the removed item.
+    final n = newIndex;
     if (oldIndex == n) return;
 
     final items = [...category.parameters];
@@ -341,19 +342,19 @@ class _EditLabTestScreenState extends ConsumerState<EditLabTestScreen> {
     final state = ref.watch(editLabTestControllerProvider);
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: context.scaffoldColor,
       appBar: AppBar(
         title: Text(l10n.editLabTestTitle),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppTheme.black),
+          icon: Icon(Icons.arrow_back, color: context.iconColor),
           onPressed: () => context.pop(),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh, color: AppTheme.black),
+            icon: Icon(Icons.refresh, color: context.iconColor),
             onPressed: _init,
           ),
         ],
@@ -425,7 +426,7 @@ class _EditLabTestScreenState extends ConsumerState<EditLabTestScreen> {
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.all(AppConstants.screenPadding),
         itemCount: detail.categories.length + 1, // +1 for header
-        onReorder: (oldIndex, newIndex) => _onReorderCategory(detail, oldIndex, newIndex),
+        onReorderItem: (oldIndex, newIndex) => _onReorderCategory(detail, oldIndex, newIndex),
         itemBuilder: (context, index) {
           if (index == 0) {
             return Padding(
@@ -511,9 +512,9 @@ class _HeaderCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppConstants.paddingMedium),
       decoration: BoxDecoration(
-        color: AppTheme.white,
+        color: context.surfaceColor,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
-        border: Border.all(color: AppTheme.divider),
+        border: Border.all(color: context.appDividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -581,11 +582,11 @@ class _InfoRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: AppConstants.paddingTiny),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: AppTheme.textSecondary),
+          Icon(icon, size: 18, color: context.textSecondaryColor),
           const SizedBox(width: AppConstants.paddingSmall),
           SizedBox(
             width: 120,
-            child: Text(label, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
+            child: Text(label, style: TextStyle(color: context.textSecondaryColor, fontSize: 13)),
           ),
           Expanded(
             child: Text(
@@ -640,9 +641,9 @@ class _CategoryCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
       decoration: BoxDecoration(
-        color: AppTheme.white,
+        color: context.surfaceColor,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
-        border: Border.all(color: AppTheme.divider),
+        border: Border.all(color: context.appDividerColor),
       ),
       child: ExpansionTile(
         key: PageStorageKey<String>('edit_category_${category.id}'),
@@ -660,12 +661,12 @@ class _CategoryCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: AppTheme.textTertiary.withValues(alpha: 0.15),
+                  color: context.textTertiaryColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(AppConstants.pillRadius),
                 ),
                 child: Text(
                   '${category.sortOrder}',
-                  style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+                  style: TextStyle(fontSize: 11, color: context.textSecondaryColor),
                 ),
               ),
           ],
@@ -698,7 +699,7 @@ class _CategoryCard extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             buildDefaultDragHandles: false,
             itemCount: category.parameters.length,
-            onReorder: onReorderParameter,
+            onReorderItem: onReorderParameter,
             itemBuilder: (context, i) {
               final p = category.parameters[i];
               return ReorderableDelayedDragStartListener(
@@ -763,7 +764,7 @@ class _ParameterRow extends StatelessWidget {
       ),
       decoration: hasFlag
           ? BoxDecoration(
-              color: color!.withValues(alpha: 0.05),
+              color: color.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(AppConstants.borderRadius),
             )
           : null,

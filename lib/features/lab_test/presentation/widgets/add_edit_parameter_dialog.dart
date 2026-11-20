@@ -114,12 +114,6 @@ class _AddEditParameterDialogState extends State<AddEditParameterDialog> {
     super.dispose();
   }
 
-  num? _parseOptionalNum(String raw) {
-    final trimmed = raw.trim();
-    if (trimmed.isEmpty) return null;
-    return num.tryParse(trimmed);
-  }
-
   bool _hasInvalidNumber(String raw) {
     final trimmed = raw.trim();
     if (trimmed.isEmpty) return false;
@@ -245,7 +239,7 @@ class _AddEditParameterDialogState extends State<AddEditParameterDialog> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         DropdownButtonFormField<String>(
-          value: _selectedCategoryId,
+          initialValue: _selectedCategoryId,
           isExpanded: true,
           decoration: InputDecoration(
             labelText: l10n.parameterCategoryLabel,
@@ -335,7 +329,7 @@ class _AddEditParameterDialogState extends State<AddEditParameterDialog> {
         ),
         const SizedBox(height: AppConstants.paddingMedium),
         DropdownButtonFormField<String>(
-          value: _flagValue,
+          initialValue: _flagValue,
           isExpanded: true,
           decoration: InputDecoration(
             labelText: l10n.parameterFlagLabel,

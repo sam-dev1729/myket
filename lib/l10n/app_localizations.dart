@@ -2511,6 +2511,210 @@ abstract class AppLocalizations {
   /// In fa, this message translates to:
   /// **'تاریخ خرید'**
   String get purchaseDateLabel;
+
+  /// No description provided for @testTypeLabel.
+  ///
+  /// In fa, this message translates to:
+  /// **'نوع آزمایش'**
+  String get testTypeLabel;
+
+  /// No description provided for @extractedParametersLabel.
+  ///
+  /// In fa, this message translates to:
+  /// **'پارامترهای استخراج شده'**
+  String get extractedParametersLabel;
+
+  /// No description provided for @normalRangeLabel.
+  ///
+  /// In fa, this message translates to:
+  /// **'محدوده نرمال'**
+  String get normalRangeLabel;
+
+  /// No description provided for @shareButton.
+  ///
+  /// In fa, this message translates to:
+  /// **'اشتراک‌گذاری'**
+  String get shareButton;
+
+  /// No description provided for @bodyOrganBrain.
+  ///
+  /// In fa, this message translates to:
+  /// **'مغز'**
+  String get bodyOrganBrain;
+
+  /// No description provided for @bodyOrganThyroid.
+  ///
+  /// In fa, this message translates to:
+  /// **'تیروئید'**
+  String get bodyOrganThyroid;
+
+  /// No description provided for @bodyOrganLungs.
+  ///
+  /// In fa, this message translates to:
+  /// **'ریه‌ها'**
+  String get bodyOrganLungs;
+
+  /// No description provided for @bodyOrganHeart.
+  ///
+  /// In fa, this message translates to:
+  /// **'قلب'**
+  String get bodyOrganHeart;
+
+  /// No description provided for @bodyOrganLiver.
+  ///
+  /// In fa, this message translates to:
+  /// **'کبد'**
+  String get bodyOrganLiver;
+
+  /// No description provided for @bodyOrganGallbladder.
+  ///
+  /// In fa, this message translates to:
+  /// **'کیسه صفرا'**
+  String get bodyOrganGallbladder;
+
+  /// No description provided for @bodyOrganStomach.
+  ///
+  /// In fa, this message translates to:
+  /// **'معده'**
+  String get bodyOrganStomach;
+
+  /// No description provided for @bodyOrganSpleen.
+  ///
+  /// In fa, this message translates to:
+  /// **'طحال'**
+  String get bodyOrganSpleen;
+
+  /// No description provided for @bodyOrganPancreas.
+  ///
+  /// In fa, this message translates to:
+  /// **'پانکراس'**
+  String get bodyOrganPancreas;
+
+  /// No description provided for @bodyOrganKidneys.
+  ///
+  /// In fa, this message translates to:
+  /// **'کلیه‌ها'**
+  String get bodyOrganKidneys;
+
+  /// No description provided for @bodyOrganAdrenals.
+  ///
+  /// In fa, this message translates to:
+  /// **'غدد فوق‌کلیوی'**
+  String get bodyOrganAdrenals;
+
+  /// No description provided for @bodyOrganSmallIntestine.
+  ///
+  /// In fa, this message translates to:
+  /// **'روده کوچک'**
+  String get bodyOrganSmallIntestine;
+
+  /// No description provided for @bodyOrganLargeIntestine.
+  ///
+  /// In fa, this message translates to:
+  /// **'روده بزرگ'**
+  String get bodyOrganLargeIntestine;
+
+  /// No description provided for @bodyOrganBladder.
+  ///
+  /// In fa, this message translates to:
+  /// **'مثانه'**
+  String get bodyOrganBladder;
+
+  /// No description provided for @bodyOrganBones.
+  ///
+  /// In fa, this message translates to:
+  /// **'استخوان‌ها'**
+  String get bodyOrganBones;
+
+  /// No description provided for @bodyOrganNerves.
+  ///
+  /// In fa, this message translates to:
+  /// **'اعصاب'**
+  String get bodyOrganNerves;
+
+  /// No description provided for @bodyOrganVessels.
+  ///
+  /// In fa, this message translates to:
+  /// **'عروق'**
+  String get bodyOrganVessels;
+
+  /// No description provided for @bodyStatusNormal.
+  ///
+  /// In fa, this message translates to:
+  /// **'طبیعی'**
+  String get bodyStatusNormal;
+
+  /// No description provided for @bodyStatusAttention.
+  ///
+  /// In fa, this message translates to:
+  /// **'نیاز به توجه'**
+  String get bodyStatusAttention;
+
+  /// No description provided for @bodyStatusAbnormal.
+  ///
+  /// In fa, this message translates to:
+  /// **'غیرطبیعی'**
+  String get bodyStatusAbnormal;
+
+  /// No description provided for @bodyNoTestsForOrgan.
+  ///
+  /// In fa, this message translates to:
+  /// **'برای این اندام آزمایشی ثبت نشده است.'**
+  String get bodyNoTestsForOrgan;
+
+  /// No description provided for @themeLabel.
+  ///
+  /// In fa, this message translates to:
+  /// **'تم ظاهری'**
+  String get themeLabel;
+
+  /// No description provided for @themePickerHint.
+  ///
+  /// In fa, this message translates to:
+  /// **'تم موردنظر را انتخاب کنید؛ تغییر بلافاصله اعمال می‌شود.'**
+  String get themePickerHint;
+
+  /// No description provided for @themeLightGroup.
+  ///
+  /// In fa, this message translates to:
+  /// **'تم‌های روشن'**
+  String get themeLightGroup;
+
+  /// No description provided for @themeDarkGroup.
+  ///
+  /// In fa, this message translates to:
+  /// **'تم تیره'**
+  String get themeDarkGroup;
+
+  /// No description provided for @themeVital.
+  ///
+  /// In fa, this message translates to:
+  /// **'سبز حیات و بنفش رویایی'**
+  String get themeVital;
+
+  /// No description provided for @themeHealing.
+  ///
+  /// In fa, this message translates to:
+  /// **'آبی شفا و نارنجی پویا'**
+  String get themeHealing;
+
+  /// No description provided for @themeTeal.
+  ///
+  /// In fa, this message translates to:
+  /// **'فیروزه‌ای حامی و مرجانی خلاق'**
+  String get themeTeal;
+
+  /// No description provided for @themeClassic.
+  ///
+  /// In fa, this message translates to:
+  /// **'کلاسیک نئون'**
+  String get themeClassic;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In fa, this message translates to:
+  /// **'شبانه'**
+  String get themeDark;
 }
 
 class _AppLocalizationsDelegate

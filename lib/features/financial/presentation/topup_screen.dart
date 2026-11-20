@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/app_constants.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../core/utils/url_launcher_helper.dart';
 import '../../../l10n/app_localizations.dart';
@@ -133,7 +132,7 @@ class _TopupScreenState extends ConsumerState<TopupScreen> {
                     const SizedBox(height: AppConstants.paddingSmall),
                     walletAsync.when(
                       loading: () => const CircularProgressIndicator(),
-                      error: (_, __) => Text(
+                      error: (_, _) => Text(
                         l10n.noData,
                         style: TextStyle(fontSize: 24, color: context.textTertiaryColor),
                       ),
@@ -223,19 +222,19 @@ class _TopupScreenState extends ConsumerState<TopupScreen> {
                 child: ElevatedButton(
                   onPressed: loading || amount == null ? null : _startTopup,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: amount == null ? context.appDividerColor : AppTheme.primary,
+                    backgroundColor: amount == null ? context.appDividerColor : context.colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppConstants.pillRadius),
                     ),
                   ),
                   child: loading
-                      ? const CircularProgressIndicator(color: AppTheme.black)
+                      ? CircularProgressIndicator(color: context.colorScheme.onPrimary)
                       : Text(
                           amount == null
                               ? l10n.payButton
                               : l10n.currencyTomanWithAmount(AmountFormatter.toTomanNaked(amount)),
                           style: TextStyle(
-                            color: amount == null ? context.textTertiaryColor : AppTheme.black,
+                            color: amount == null ? context.textTertiaryColor : context.colorScheme.onPrimary,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
@@ -276,7 +275,7 @@ class _RadioOptionRow extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primary.withValues(alpha: 0.1) : Colors.transparent,
+          color: isSelected ? context.colorScheme.primary.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(AppConstants.borderRadius),
         ),
         child: Row(
@@ -288,7 +287,7 @@ class _RadioOptionRow extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? AppTheme.primary : context.textTertiaryColor,
+                  color: isSelected ? context.colorScheme.primary : context.textTertiaryColor,
                   width: 2,
                 ),
               ),
@@ -297,8 +296,8 @@ class _RadioOptionRow extends StatelessWidget {
                       child: Container(
                         width: 12,
                         height: 12,
-                        decoration: const BoxDecoration(
-                          color: AppTheme.primary,
+                        decoration: BoxDecoration(
+                          color: context.colorScheme.primary,
                           shape: BoxShape.circle,
                         ),
                       ),

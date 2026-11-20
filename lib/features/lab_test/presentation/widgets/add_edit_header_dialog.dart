@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:persian_calendar_widget/persian_calendar_widget.dart';
-import 'package:shamsi_date/shamsi_date.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/theme_extensions.dart';

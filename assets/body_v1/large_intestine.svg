@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 510 860 1550">
+  <g id="large_intestine">
+    <path d="M 412 1362 L 412 1265 C 412 1245 430 1242 450 1242 L 650 1238 C 680 1238 690 1255 686 1285 L 686 1370 C 686 1410 640 1430 590 1435 C 540 1440 536 1452 538 1475 L 540 1488" fill="none" stroke="#D4947A" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 412 1362 L 412 1265 C 412 1245 430 1242 450 1242 L 650 1238 C 680 1238 690 1255 686 1285 L 686 1370 C 686 1410 640 1430 590 1435 C 540 1440 536 1452 538 1475 L 540 1488" fill="none" stroke="#C47F66" stroke-width="42" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="2 16"/>
+    <circle cx="412" cy="1362" r="22" fill="#D4947A"/>
+    <path d="M 400 1378 C 392 1392 388 1396 392 1408" fill="none" stroke="#D4947A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

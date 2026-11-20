@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/network/api_client.dart';
@@ -41,7 +42,7 @@ class FileRepository {
       final uploadId = initResponse.body!.uploadId;
       final chunkSize = initResponse.body!.chunkSize;
 
-      print("UPLOAD_START: Total Size = $totalSize, Chunk Size = $chunkSize");
+      debugPrint('UPLOAD_START: Total Size = $totalSize, Chunk Size = $chunkSize');
 
       // 3. Upload chunks sequentially.
       final raf = await file.open();
@@ -59,7 +60,7 @@ class FileRepository {
             throw Exception("Read error: Expected $length bytes, but read ${chunkBytes.length}");
           }
 
-          print("UPLOAD_CHUNK: Sending offset=$offset, length=$length, end=$end");
+          debugPrint('UPLOAD_CHUNK: Sending offset=$offset, length=$length, end=$end');
 
           final multipartFile = MultipartFile.fromBytes(chunkBytes, filename: 'chunk');
 
@@ -68,7 +69,7 @@ class FileRepository {
           final chunkResponse = await api.uploadChunk(uploadId, offset, multipartFile);
 
           if (!chunkResponse.success) {
-            print("UPLOAD_ERROR: Server rejected chunk at offset $offset");
+            debugPrint('UPLOAD_ERROR: Server rejected chunk at offset $offset');
             throw chunkResponse.error!;
           }
 
@@ -82,7 +83,7 @@ class FileRepository {
         await raf.close();
       }
 
-      print("UPLOAD_COMPLETE: All chunks uploaded successfully.");
+      debugPrint('UPLOAD_COMPLETE: All chunks uploaded successfully.');
 
       // 4. Complete the upload.
       final completeResponse = await api.completeUpload(uploadId);

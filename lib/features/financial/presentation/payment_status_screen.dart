@@ -73,14 +73,14 @@ class PaymentStatusScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => context.go(AppConstants.mainRoute),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primary,
+                    backgroundColor: context.colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppConstants.borderRadius),
                     ),
                   ),
                   child: Text(
                     l10n.paymentStatusBackHomeButton,
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(color: context.colorScheme.onPrimary, fontSize: 16),
                   ),
                 ),
               ),

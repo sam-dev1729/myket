@@ -109,7 +109,7 @@ class _BalanceCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppConstants.paddingLarge),
       decoration: BoxDecoration(
-        color: AppTheme.primary,
+        color: context.colorScheme.primary,
         borderRadius: BorderRadius.circular(AppConstants.financialCardRadius),
       ),
       child: Column(
@@ -117,13 +117,13 @@ class _BalanceCard extends StatelessWidget {
         children: [
           Text(
             l10n.walletBalanceLabel,
-            style: const TextStyle(color: Colors.white70, fontSize: 13),
+            style: TextStyle(color: context.colorScheme.onPrimary.withValues(alpha: 0.7), fontSize: 13),
           ),
           const SizedBox(height: AppConstants.paddingSmall),
           Text(
             l10n.currencyTomanWithAmount(AmountFormatter.toTomanNaked(wallet.balance)),
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: context.colorScheme.onPrimary,
               fontSize: AppConstants.walletBalanceFontSize,
               fontWeight: FontWeight.bold,
             ),
@@ -134,21 +134,29 @@ class _BalanceCard extends StatelessWidget {
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () => context.push(AppConstants.topupRoute),
-                  icon: const Icon(Icons.add, color: Colors.white),
-                  label: Text(l10n.walletTopupButton, style: const TextStyle(color: Colors.white)),
-                  style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.white54)),
+                  icon: Icon(Icons.add, color: context.colorScheme.onPrimary),
+                  label: Text(l10n.walletTopupButton, style: TextStyle(color: context.colorScheme.onPrimary)),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      color: context.colorScheme.onPrimary.withValues(alpha: 0.54),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: AppConstants.paddingMedium),
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () => context.push(AppConstants.packagesRoute),
-                  icon: const Icon(Icons.shopping_bag, color: Colors.white),
+                  icon: Icon(Icons.shopping_bag, color: context.colorScheme.onPrimary),
                   label: Text(
                     l10n.walletBuyPackageButton,
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: context.colorScheme.onPrimary),
                   ),
-                  style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.white54)),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      color: context.colorScheme.onPrimary.withValues(alpha: 0.54),
+                    ),
+                  ),
                 ),
               ),
             ],

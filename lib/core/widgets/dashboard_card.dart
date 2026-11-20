@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
+
+import '../theme/theme_extensions.dart';
 
 class DashboardCard extends StatelessWidget {
   final String title;
@@ -33,7 +34,7 @@ class DashboardCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppTheme.white,
+                color: context.surfaceColor,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
@@ -51,10 +52,10 @@ class DashboardCard extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 2, // 👈 Allow up to 2 lines
               overflow: TextOverflow.ellipsis, // 👈 Add ellipsis if still too long
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.black,
+                color: context.textPrimaryColor,
               ),
             ),
           ],

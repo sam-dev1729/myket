@@ -1,35 +1,43 @@
 import 'package:flutter/material.dart';
+
+import 'app_colors.dart';
+import 'app_palette.dart';
 import 'app_theme.dart';
 
 /// Theme-aware color helpers on [BuildContext].
 ///
-/// Instead of hardcoded [AppTheme] constants (which are light-mode only),
-/// use `context.surfaceColor`, `context.textPrimaryColor`, etc. These
-/// automatically follow the current brightness (light/dark).
+/// Prefer these over hardcoded colors so every screen follows the active
+/// theme (light palette or dark). The values come from the `AppColors`
+/// extension registered by `AppTheme.themeFor`.
 ///
-/// Example:
 /// ```dart
-/// // ❌ Before (light-only)
-/// Container(color: AppTheme.white)
-///
-/// // ✅ After (light + dark)
 /// Container(color: context.surfaceColor)
+/// Text('...', style: TextStyle(color: context.textSecondaryColor))
 /// ```
 extension ThemeX on BuildContext {
   ColorScheme get colorScheme => Theme.of(this).colorScheme;
   ThemeData get theme => Theme.of(this);
   TextTheme get textTheme => theme.textTheme;
 
-  Color get surfaceColor => colorScheme.surface;
-  Color get surfaceVariantColor => colorScheme.surfaceContainerHighest;
-  Color get scaffoldColor => theme.scaffoldBackgroundColor;
+  /// Full palette extension of the active theme.
+  AppColors get appColors =>
+      theme.extension<AppColors>() ?? AppColors.fromPalette(AppPalette.vital);
 
-  Color get textPrimaryColor => colorScheme.onSurface;
-  Color get textSecondaryColor => colorScheme.onSurface.withValues(alpha: 0.6);
-  Color get textTertiaryColor => colorScheme.onSurface.withValues(alpha: 0.4);
+  Color get surfaceColor => appColors.surface;
+  Color get surfaceVariantColor => appColors.surfaceVariant;
+  Color get scaffoldColor => appColors.background;
 
-  Color get appDividerColor => theme.dividerColor;
-  Color get iconColor => colorScheme.onSurface;
+  Color get primaryColor => appColors.primary;
+  Color get onPrimaryColor => appColors.onPrimary;
+  Color get secondaryColor => appColors.secondary;
+  Color get accentColor => appColors.accent;
+
+  Color get textPrimaryColor => appColors.textPrimary;
+  Color get textSecondaryColor => appColors.textSecondary;
+  Color get textTertiaryColor => appColors.textTertiary;
+
+  Color get appDividerColor => appColors.divider;
+  Color get iconColor => appColors.textPrimary;
 
   Color get softRedBg => theme.brightness == Brightness.dark
       ? AppTheme.softRedBackgroundDark

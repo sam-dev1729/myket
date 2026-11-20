@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 510 860 1550">
+  <g id="vessels">
+    <path d="M 581 904 C 571 859 611 834 651 844 C 711 859 741 909 747 969 C 759 1049 791 1119 826 1199 C 851 1259 869 1329 886 1394 L 903 1489" fill="none" stroke="#6FA0B8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 590 895 C 580 850 620 825 660 835 C 720 850 750 900 756 960 C 768 1040 800 1110 835 1190 C 860 1250 878 1320 895 1385 L 912 1480" fill="none" stroke="#D96B64" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 862 1396 L 878 1500 M 876 1396 L 898 1496" fill="none" stroke="#D96B64" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 852 1396 L 862 1500" fill="none" stroke="#6FA0B8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 489 1545 C 479 1600 469 1650 463 1700 C 457 1780 449 1870 441 1990" fill="none" stroke="#6FA0B8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 500 1545 C 490 1600 480 1650 474 1700 C 468 1780 460 1870 452 1990" fill="none" stroke="#D96B64" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 593 1545 C 603 1600 613 1650 619 1700 C 625 1780 633 1870 641 1990" fill="none" stroke="#6FA0B8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 582 1545 C 592 1600 602 1650 608 1700 C 614 1780 622 1870 630 1990" fill="none" stroke="#D96B64" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

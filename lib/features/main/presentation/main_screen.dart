@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/auth/session_expired_provider.dart';
 import '../../../core/constants/app_constants.dart';
-import '../../../core/theme/app_theme.dart';
+import '../../../core/theme/theme_extensions.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../profile/presentation/tabs/profile_tab.dart';
 import 'tabs/features_tab.dart';
@@ -42,7 +42,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       body: IndexedStack(index: _currentIndex, children: _screens),
       bottomNavigationBar: Container(
         height: AppConstants.bottomNavHeight,
-        decoration: const BoxDecoration(color: AppTheme.primary),
+        decoration: BoxDecoration(color: context.colorScheme.primary),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -59,7 +59,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   /// Builds a single bottom-navigation item with an icon and a label.
   Widget _buildNavItem(int index, IconData icon, String label) {
     final isSelected = _currentIndex == index;
-    final color = isSelected ? AppTheme.black : AppTheme.black.withValues(alpha: 0.55);
+    final color = isSelected
+        ? context.colorScheme.onPrimary
+        : context.colorScheme.onPrimary.withValues(alpha: 0.55);
     return Expanded(
       child: InkWell(
         onTap: () => setState(() => _currentIndex = index),

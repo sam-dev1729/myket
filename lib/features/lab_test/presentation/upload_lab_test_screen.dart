@@ -43,11 +43,11 @@ class _UploadLabTestScreenState extends ConsumerState<UploadLabTestScreen> {
   }
 
   Future<void> _pickFile() async {
-    final List<PlatformFile>? result = await FilePicker.pickFiles(
+    final List<PlatformFile> result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
     );
-    if (result != null && result.isNotEmpty) {
+    if (result.isNotEmpty) {
       final String? path = result.first.path;
       if (path != null) {
         final file = File(path);
@@ -118,10 +118,10 @@ class _UploadLabTestScreenState extends ConsumerState<UploadLabTestScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
+              Icon(
                 Icons.upload_file,
                 size: AppConstants.iconSizeHero,
-                color: AppTheme.primary,
+                color: context.colorScheme.primary,
               ),
               const SizedBox(height: AppConstants.paddingLarge),
               Text(
@@ -133,7 +133,7 @@ class _UploadLabTestScreenState extends ConsumerState<UploadLabTestScreen> {
               ElevatedButton(
                 onPressed: _pickFile,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primary,
+                  backgroundColor: context.colorScheme.primary,
                   minimumSize: const Size(double.infinity, AppConstants.buttonHeight),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(AppConstants.borderRadius),
@@ -142,7 +142,7 @@ class _UploadLabTestScreenState extends ConsumerState<UploadLabTestScreen> {
                 child: Text(
                   l10n.selectFile,
                   style: context.textTheme.titleMedium?.copyWith(
-                    color: AppTheme.white,
+                    color: context.colorScheme.onPrimary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -158,7 +158,7 @@ class _UploadLabTestScreenState extends ConsumerState<UploadLabTestScreen> {
             children: [
               Text(l10n.uploadingFile, style: context.textTheme.titleLarge),
               const SizedBox(height: AppConstants.paddingMedium),
-              LinearProgressIndicator(value: state.uploadProgress, color: AppTheme.primary),
+              LinearProgressIndicator(value: state.uploadProgress, color: context.colorScheme.primary),
               const SizedBox(height: AppConstants.paddingSmall),
               Text('${(state.uploadProgress * 100).toStringAsFixed(1)}%'),
             ],
@@ -170,7 +170,7 @@ class _UploadLabTestScreenState extends ConsumerState<UploadLabTestScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const CircularProgressIndicator(color: AppTheme.primary),
+              CircularProgressIndicator(color: context.colorScheme.primary),
               const SizedBox(height: AppConstants.paddingLarge),
               Text(l10n.extractingData, style: context.textTheme.titleLarge),
             ],
@@ -182,7 +182,7 @@ class _UploadLabTestScreenState extends ConsumerState<UploadLabTestScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const CircularProgressIndicator(color: AppTheme.primary),
+              CircularProgressIndicator(color: context.colorScheme.primary),
               const SizedBox(height: AppConstants.paddingLarge),
               Text(l10n.savingLabTest, style: context.textTheme.titleLarge),
             ],
@@ -250,7 +250,7 @@ class _UploadLabTestScreenState extends ConsumerState<UploadLabTestScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: state.status == LabTestProcessStatus.saveSuccess
                         ? context.appDividerColor
-                        : AppTheme.primary,
+                        : context.colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppConstants.borderRadius),
                     ),
@@ -258,7 +258,7 @@ class _UploadLabTestScreenState extends ConsumerState<UploadLabTestScreen> {
                   child: Text(
                     state.status == LabTestProcessStatus.saveSuccess ? l10n.save : l10n.saveLabTest,
                     style: context.textTheme.titleMedium?.copyWith(
-                      color: AppTheme.white,
+                      color: context.colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -291,7 +291,7 @@ class _UploadLabTestScreenState extends ConsumerState<UploadLabTestScreen> {
         title: Text(
           category.name,
           style: context.textTheme.titleMedium?.copyWith(
-            color: AppTheme.primary,
+            color: context.colorScheme.primary,
             fontWeight: FontWeight.bold,
           ),
         ),

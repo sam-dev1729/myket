@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 510 860 1550">
+  <g id="lungs">
+    <path d="M 505 848 C 470 838 435 872 415 925 C 395 978 384 1036 390 1086 C 392 1090 395 1094 410 1094 C 450 1096 490 1092 508 1076 C 514 1030 512 930 505 848 Z" fill="#EDB5B5" stroke="#C29494" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M 577 848 C 612 838 647 872 667 925 C 687 978 698 1036 692 1086 C 690 1090 687 1094 672 1094 C 632 1096 592 1092 574 1076 C 568 1030 570 930 577 848 Z" fill="#EDB5B5" stroke="#C29494" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M 506 905 C 470 945 430 995 395 1045" fill="none" stroke="#D19F9F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 576 905 C 612 945 652 995 687 1045" fill="none" stroke="#D19F9F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 400 985 C 440 990 470 985 506 968" fill="none" stroke="#D19F9F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 826 L 541 884" fill="none" stroke="#E0C2BC" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 826 L 541 884" fill="none" stroke="#F3D3CC" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 826 L 541 884" fill="none" stroke="#CFB3AD" stroke-width="13" stroke-linecap="butt" stroke-linejoin="round" stroke-dasharray="2 7"/>
+    <path d="M 541 884 C 524 897 494 917 474 944" fill="none" stroke="#F3D3CC" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 474 944 C 466 962 462 984 455 1018" fill="none" stroke="#F3D3CC" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 468 952 C 450 948 434 958 424 974" fill="none" stroke="#F3D3CC" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 474 944 C 484 966 488 990 486 1020" fill="none" stroke="#F3D3CC" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 884 C 558 897 588 917 608 944" fill="none" stroke="#F3D3CC" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 608 944 C 616 962 620 984 627 1018" fill="none" stroke="#F3D3CC" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 614 952 C 632 948 648 958 658 974" fill="none" stroke="#F3D3CC" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 608 944 C 598 966 594 990 596 1020" fill="none" stroke="#F3D3CC" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

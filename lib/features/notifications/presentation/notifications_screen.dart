@@ -156,7 +156,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                             final ok = await ref
                                 .read(notificationsControllerProvider.notifier)
                                 .markAsRead(receipt.notification.id);
-                            if (!mounted || ok) return;
+                            if (!context.mounted || ok) return;
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(l10n.updateError),
@@ -197,7 +197,7 @@ class _NotificationCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: context.surfaceVariantColor,
           borderRadius: BorderRadius.circular(AppConstants.cardRadius),
-          border: unread ? Border.all(color: AppTheme.primary, width: 1.5) : null,
+          border: unread ? Border.all(color: context.colorScheme.primary, width: 1.5) : null,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

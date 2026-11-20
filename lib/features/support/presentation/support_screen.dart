@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_constants.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_extensions.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -30,7 +29,7 @@ class SupportScreen extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              color: AppTheme.primary,
+              color: context.colorScheme.primary,
               padding: const EdgeInsets.all(AppConstants.paddingMedium),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -41,25 +40,25 @@ class SupportScreen extends StatelessWidget {
                       children: [
                         Text(
                           l10n.supportGreetingTitle,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.black,
+                            color: context.colorScheme.onPrimary,
                           ),
                         ),
                         const SizedBox(height: AppConstants.paddingTiny),
                         Text(
                           l10n.supportSubtitle,
-                          style: const TextStyle(fontSize: 12, color: AppTheme.black54),
+                          style: TextStyle(fontSize: 12, color: context.onPrimaryColor.withValues(alpha: 0.55)),
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(width: AppConstants.paddingMedium),
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: AppConstants.avatarRadius,
-                    backgroundColor: AppTheme.white,
-                    child: Icon(Icons.support_agent, color: AppTheme.primary, size: 32),
+                    backgroundColor: context.surfaceColor,
+                    child: Icon(Icons.support_agent, color: context.colorScheme.primary, size: 32),
                   ),
                 ],
               ),

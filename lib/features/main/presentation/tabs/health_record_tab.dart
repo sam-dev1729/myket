@@ -3,22 +3,117 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/theme_extensions.dart';
-
 import '../../../../l10n/app_localizations.dart';
 import '../../../lab_test/data/models/lab_test_models.dart';
 import '../../../lab_test/presentation/health_overview_provider.dart';
+import '../../../lab_test/presentation/widgets/human_body_view.dart';
 
-/// The "Health Record" tab that renders the AI-driven health overview
-/// (`GET /lab-test/overview/health`).
-///
-/// Layout:
-/// 1. Overall health gauge + status label.
-/// 2. Key markers list (FBS, Calcium, ALT, WBC, …).
-/// 3. Doctor-suggestions banner.
-/// 4. "Read more" health-advice links.
+// ─────────────────────────────────────────────────────────────
+// نگاشت آزمایش ← اندام
+// این جدول فقط یک نقطه‌ی شروع است؛ با کدها و نام‌های واقعی آزمایش‌های
+// خودتان تطبیق بدهید.
+// ─────────────────────────────────────────────────────────────
+
+/// تطبیق دقیق با کد آزمایش (حروف کوچک). برای کدهای کوتاه که با جستجوی
+/// «شامل بودن» اشتباه می‌شوند (مثل ast که داخل fasting هم هست).
+const _organByCode = <String, String>{
+  'alt': 'liver',
+  'ast': 'liver',
+  'alp': 'liver',
+  'ggt': 'liver',
+  'sgpt': 'liver',
+  'sgot': 'liver',
+  'cr': 'kidneys',
+  'bun': 'kidneys',
+  'egfr': 'kidneys',
+  'tsh': 'thyroid',
+  't3': 'thyroid',
+  't4': 'thyroid',
+  'ft3': 'thyroid',
+  'ft4': 'thyroid',
+  'ldl': 'heart',
+  'hdl': 'heart',
+  'tg': 'heart',
+  'chol': 'heart',
+  'ckmb': 'heart',
+  'fbs': 'pancreas',
+  'hba1c': 'pancreas',
+  'a1c': 'pancreas',
+  'hb': 'vessels',
+  'hgb': 'vessels',
+  'hct': 'vessels',
+  'wbc': 'vessels',
+  'rbc': 'vessels',
+  'plt': 'vessels',
+  'esr': 'vessels',
+  'crp': 'vessels',
+};
+
+/// جستجوی «شامل بودن» در نام آزمایش (حروف کوچک). فقط کلمات بلند.
+const _organKeywords = <String, List<String>>{
+  'liver': ['bilirubin', 'albumin', 'بیلی', 'آلبومین', 'آلانین', 'آسپارتات', 'کبدی'],
+  'kidneys': ['creatinine', 'urea', 'uric', 'کراتینین', 'اوره', 'اوریک'],
+  'thyroid': ['thyroid', 'تیروئید', 'تیروکسین'],
+  'heart': ['cholesterol', 'triglyceride', 'troponin', 'کلسترول', 'گلیسرید', 'تروپونین'],
+  'pancreas': ['glucose', 'amylase', 'lipase', 'insulin', 'قند', 'آمیلاز', 'لیپاز', 'انسولین'],
+  'bones': ['calcium', 'vitamin d', 'phosph', 'کلسیم', 'ویتامین', 'فسفر'],
+  'vessels': ['hemoglobin', 'platelet', 'هموگلوبین', 'پلاکت', 'گلبول'],
+  'stomach': ['pylori', 'پیلوری'],
+  'adrenals': ['cortisol', 'کورتیزول'],
+};
+
+String? _organOf(HealthKeyMarker m) {
+  final code = (m.code ?? '').toLowerCase().trim();
+  final byCode = _organByCode[code];
+  if (byCode != null) return byCode;
+
+  final name = (m.name ?? '').toLowerCase();
+  for (final entry in _organKeywords.entries) {
+    for (final keyword in entry.value) {
+      if (name.contains(keyword)) return entry.key;
+    }
+  }
+  return null;
+}
+
+int _severity(String? status) {
+  switch (status?.toLowerCase()) {
+    case HealthOverviewStatus.red:
+      return 3;
+    case HealthOverviewStatus.orange:
+      return 2;
+    case HealthOverviewStatus.green:
+      return 1;
+    default:
+      return 0;
+  }
+}
+
+/// برای هر اندام بدترین وضعیت بین آزمایش‌های مربوط به آن را برمی‌گرداند.
+Map<String, OrganStatus> _organStatuses(List<HealthKeyMarker> markers) {
+  final worst = <String, int>{};
+  for (final m in markers) {
+    final organ = _organOf(m);
+    if (organ == null) continue;
+    final sev = _severity(m.status);
+    if (sev == 0) continue;
+    if (sev > (worst[organ] ?? 0)) worst[organ] = sev;
+  }
+  return {
+    for (final e in worst.entries)
+      e.key: switch (e.value) {
+        3 => OrganStatus.abnormal,
+        2 => OrganStatus.attention,
+        _ => OrganStatus.normal,
+      },
+  };
+}
+
+/// The "Health Record" tab that renders the AI-driven health overview.
 class HealthRecordTab extends ConsumerWidget {
   const HealthRecordTab({super.key});
 
@@ -63,7 +158,6 @@ class _OverviewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Empty state: user has not uploaded any lab test yet.
     if (overview.overallStatus == null && overview.keyMarkers.isEmpty) {
       return ListView(
         padding: const EdgeInsets.symmetric(horizontal: AppConstants.screenPadding),
@@ -84,11 +178,64 @@ class _OverviewBody extends StatelessWidget {
     final gaugeValue = _statusToGaugeValue(status);
     final statusColor = _statusToColor(context, status);
     final statusLabel = _statusToLabel(status, l10n);
+    final organStatuses = _organStatuses(overview.keyMarkers);
 
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.screenPadding),
       children: [
         const SizedBox(height: AppConstants.paddingMedium),
+
+        // ─── بخش آدمک تعاملی (Body Map) ───
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          decoration: BoxDecoration(
+            color: context.surfaceColor,
+            borderRadius: BorderRadius.circular(AppConstants.largeCardRadius),
+            border: Border.all(color: context.appDividerColor),
+          ),
+          child: Column(
+            children: [
+              Text(
+                'نقشه تعاملی بدن',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: context.textPrimaryColor,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'برای مشاهده وضعیت هر اندام، روی آن کلیک کنید.',
+                style: TextStyle(fontSize: 12, color: context.textSecondaryColor),
+              ),
+              const SizedBox(height: 24),
+
+              // نمایش آدمک (نسبت تصویر را خود HumanBodyView تنظیم می‌کند)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                  color: context.softTealBg,
+                  borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                ),
+                child: SizedBox(
+                  height: 520,
+                  child: Center(
+                    child: HumanBodyView(
+                      statuses: organStatuses,
+                      onOrganTap: (organ) => _showOrganSheet(context, organ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const HumanBodyLegend(),
+            ],
+          ),
+        ),
+        const SizedBox(height: AppConstants.paddingLarge),
+
+        // ─── بخش گیج سلامت ───
         _SectionTitle(title: l10n.overallHealth),
         const SizedBox(height: AppConstants.paddingMedium),
         Container(
@@ -107,6 +254,7 @@ class _OverviewBody extends StatelessWidget {
                   painter: _HealthGaugePainter(
                     value: gaugeValue,
                     strokeWidth: AppConstants.healthGaugeStrokeWidth,
+                    tickColor: context.textTertiaryColor,
                   ),
                 ),
               ),
@@ -117,7 +265,8 @@ class _OverviewBody extends StatelessWidget {
               ),
             ],
           ),
-        ), // CTA to the full results overview (all mapped parameters).
+        ),
+
         const SizedBox(height: AppConstants.paddingMedium),
         SizedBox(
           width: double.infinity,
@@ -137,12 +286,14 @@ class _OverviewBody extends StatelessWidget {
             ),
           ),
         ),
+
         if (overview.keyMarkers.isNotEmpty) ...[
           const SizedBox(height: AppConstants.paddingXLarge),
           _SectionTitle(title: l10n.healthOverviewKeyMarkers),
           const SizedBox(height: AppConstants.paddingMedium),
           ...overview.keyMarkers.map((marker) => _KeyMarkerRow(marker: marker, l10n: l10n)),
         ],
+
         const SizedBox(height: AppConstants.paddingXLarge),
         _SectionTitle(title: l10n.doctorSuggestions),
         const SizedBox(height: AppConstants.paddingMedium),
@@ -169,8 +320,6 @@ class _OverviewBody extends StatelessWidget {
                     ),
                     const SizedBox(height: AppConstants.paddingTiny),
                     Text(
-                      // Fall back to the generic description when the AI
-                      // advice is still empty (backend placeholder).
                       (overview.advice != null && overview.advice!.isNotEmpty)
                           ? overview.advice!
                           : l10n.doctorSuggestionsDescription,
@@ -198,26 +347,56 @@ class _OverviewBody extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppConstants.paddingXLarge),
-        _SectionTitle(title: l10n.readMore),
-        const SizedBox(height: AppConstants.paddingSmall),
-        Text(
-          l10n.doctorSuggestionsDescription,
-          textAlign: TextAlign.start,
-          style: TextStyle(fontSize: 12, color: context.textSecondaryColor),
-        ),
-        const SizedBox(height: AppConstants.paddingMedium),
-        _ReadMoreLink(text: l10n.healthAdvice1),
-        const SizedBox(height: AppConstants.paddingSmall),
-        _ReadMoreLink(text: l10n.healthAdvice2),
-        const SizedBox(height: AppConstants.paddingSmall),
-        _ReadMoreLink(text: l10n.healthAdvice3),
-        const SizedBox(height: AppConstants.paddingXLarge),
       ],
     );
   }
 
-  /// Maps `overall_status` to a value the semicircular gauge expects
-  /// (0 = healthy, 1 = danger).
+  /// با لمس یک اندام، آزمایش‌های مربوط به آن را نشان می‌دهد.
+  void _showOrganSheet(BuildContext context, OrganInfo organ) {
+    final related = overview.keyMarkers.where((m) => _organOf(m) == organ.id).toList();
+
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (sheetContext) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppConstants.screenPadding,
+            0,
+            AppConstants.screenPadding,
+            AppConstants.paddingLarge,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  bodyOrganName(l10n, organ.id),
+                  style: sheetContext.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: sheetContext.textPrimaryColor,
+                  ),
+                ),
+                const SizedBox(height: AppConstants.paddingMedium),
+                if (related.isEmpty)
+                  Text(
+                    l10n.bodyNoTestsForOrgan,
+                    style: sheetContext.textTheme.bodySmall?.copyWith(
+                      color: sheetContext.textSecondaryColor,
+                    ),
+                  )
+                else
+                  ...related.map((m) => _KeyMarkerRow(marker: m, l10n: l10n)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   double _statusToGaugeValue(String? status) {
     switch (status?.toLowerCase()) {
       case HealthOverviewStatus.green:
@@ -231,7 +410,6 @@ class _OverviewBody extends StatelessWidget {
     }
   }
 
-  /// Maps `overall_status` to a semantic color.
   Color _statusToColor(BuildContext context, String? status) {
     switch (status?.toLowerCase()) {
       case HealthOverviewStatus.green:
@@ -245,7 +423,6 @@ class _OverviewBody extends StatelessWidget {
     }
   }
 
-  /// Maps `overall_status` to a localized label.
   String _statusToLabel(String? status, AppLocalizations l10n) {
     switch (status?.toLowerCase()) {
       case HealthOverviewStatus.green:
@@ -326,7 +503,6 @@ class _KeyMarkerRow extends StatelessWidget {
   }
 }
 
-/// Error state with a retry button.
 class _ErrorView extends StatelessWidget {
   final VoidCallback onRetry;
 
@@ -348,7 +524,6 @@ class _ErrorView extends StatelessWidget {
   }
 }
 
-/// The top icon bar shared by tab screens.
 class _TopIconBar extends StatelessWidget {
   const _TopIconBar();
 
@@ -375,7 +550,6 @@ class _TopIconBar extends StatelessWidget {
   }
 }
 
-/// A round icon button with an optional notification badge.
 class _CircleIconButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
@@ -414,7 +588,6 @@ class _CircleIconButton extends StatelessWidget {
   }
 }
 
-/// A direction-aware section title.
 class _SectionTitle extends StatelessWidget {
   final String title;
 
@@ -430,36 +603,16 @@ class _SectionTitle extends StatelessWidget {
   }
 }
 
-/// A blue underlined "read more" link.
-class _ReadMoreLink extends StatelessWidget {
-  final String text;
-
-  const _ReadMoreLink({required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Text(
-        text,
-        textAlign: TextAlign.start,
-        style: const TextStyle(
-          fontSize: 13,
-          color: AppTheme.info,
-          decoration: TextDecoration.underline,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-}
-
-/// Custom painter that draws the semi-circular health gauge.
 class _HealthGaugePainter extends CustomPainter {
   final double value;
   final double strokeWidth;
+  final Color tickColor;
 
-  _HealthGaugePainter({required this.value, required this.strokeWidth});
+  _HealthGaugePainter({
+    required this.value,
+    required this.strokeWidth,
+    required this.tickColor,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -489,7 +642,7 @@ class _HealthGaugePainter extends CustomPainter {
     }
 
     final tickPaint = Paint()
-      ..color = AppTheme.textTertiary
+      ..color = tickColor
       ..strokeWidth = 2;
     for (int i = 0; i <= 8; i++) {
       final t = i / 8;
@@ -517,11 +670,11 @@ class _HealthGaugePainter extends CustomPainter {
     canvas.drawLine(center, needleEnd, needlePaint);
 
     canvas.drawCircle(center, 6, Paint()..color = AppTheme.gaugeNeedle);
-    canvas.drawCircle(center, 3, Paint()..color = AppTheme.white);
+    canvas.drawCircle(center, 3, Paint()..color = Colors.white);
   }
 
   @override
   bool shouldRepaint(covariant _HealthGaugePainter oldDelegate) {
-    return oldDelegate.value != value;
+    return oldDelegate.value != value || oldDelegate.tickColor != tickColor;
   }
 }

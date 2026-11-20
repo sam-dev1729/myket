@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 510 860 1550">
+  <g id="kidneys">
+    <path d="M 470 1285 C 440 1280 412 1305 412 1340 C 412 1375 435 1395 462 1392 C 480 1388 482 1370 472 1355 C 464 1340 468 1325 478 1312 C 486 1300 482 1286 470 1285 Z" fill="#B4766C" stroke="#946159" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M 612 1285 C 642 1280 670 1305 670 1340 C 670 1375 647 1395 620 1392 C 602 1388 600 1370 610 1355 C 618 1340 614 1325 604 1312 C 596 1300 600 1286 612 1285 Z" fill="#B4766C" stroke="#946159" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M 440 1302 C 426 1322 426 1360 444 1380" fill="none" stroke="#C79891" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 642 1302 C 656 1322 656 1360 638 1380" fill="none" stroke="#C79891" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="476" cy="1338" rx="6" ry="13" fill="#F1DFC8"/>
+    <ellipse cx="606" cy="1338" rx="6" ry="13" fill="#F1DFC8"/>
+    <path d="M 476 1340 C 490 1370 495 1420 520 1470 L 535 1494" fill="none" stroke="#F4E6D2" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 606 1340 C 592 1370 587 1420 562 1470 L 547 1494" fill="none" stroke="#F4E6D2" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -79,7 +79,7 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                 ),
-                error: (_, __) => const SizedBox.shrink(),
+                error: (_, _) => const SizedBox.shrink(),
                 data: (categories) => ListView.separated(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(
@@ -87,7 +87,7 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
                     vertical: AppConstants.paddingSmall,
                   ),
                   itemCount: categories.length + 1,
-                  separatorBuilder: (_, __) => const SizedBox(width: AppConstants.paddingSmall),
+                  separatorBuilder: (_, _) => const SizedBox(width: AppConstants.paddingSmall),
                   itemBuilder: (context, index) {
                     // Index 0 = "All" chip.
                     final isAll = index == 0;
@@ -102,14 +102,14 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
                       onSelected: (_) {
                         ref.read(selectedBlogCategoryProvider.notifier).select(id);
                       },
-                      selectedColor: AppTheme.primary.withValues(alpha: 0.2),
+                      selectedColor: context.colorScheme.primary.withValues(alpha: 0.2),
                       labelStyle: TextStyle(
                         fontSize: 13,
                         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                        color: isSelected ? AppTheme.primary : context.textPrimaryColor,
+                        color: isSelected ? context.colorScheme.primary : context.textPrimaryColor,
                       ),
                       side: BorderSide(
-                        color: isSelected ? AppTheme.primary : context.appDividerColor,
+                        color: isSelected ? context.colorScheme.primary : context.appDividerColor,
                       ),
                       showCheckmark: false,
                     );
@@ -144,7 +144,7 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
                       controller: _scrollController,
                       padding: const EdgeInsets.all(AppConstants.screenPadding),
                       itemCount: data.items.length + (data.hasMore ? 1 : 0),
-                      separatorBuilder: (_, __) =>
+                      separatorBuilder: (_, _) =>
                           const SizedBox(height: AppConstants.paddingMedium),
                       itemBuilder: (context, index) {
                         if (index >= data.items.length) {
@@ -205,11 +205,11 @@ class _BlogPostCard extends StatelessWidget {
                   fit: BoxFit.cover,
                   // 👇 بهینه‌سازی: کاهش سایز تصویر در حافظه برای جلوگیری از لگ
                   memCacheWidth: 800,
-                  placeholder: (_, __) => Container(
+                  placeholder: (_, _) => Container(
                     color: context.surfaceVariantColor,
                     child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
                   ),
-                  errorWidget: (_, __, ___) => Container(
+                  errorWidget: (_, _, _) => Container(
                     color: context.surfaceVariantColor,
                     child: Icon(
                       Icons.image_not_supported_outlined,
@@ -232,15 +232,15 @@ class _BlogPostCard extends StatelessWidget {
                             (c) => Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                               decoration: BoxDecoration(
-                                color: AppTheme.primary.withValues(alpha: 0.1),
+                                color: context.colorScheme.primary.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
                                 c.name,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
-                                  color: AppTheme.primary,
+                                  color: context.colorScheme.primary,
                                 ),
                               ),
                             ),

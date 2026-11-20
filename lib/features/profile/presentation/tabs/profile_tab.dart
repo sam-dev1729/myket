@@ -45,7 +45,7 @@ class ProfileTab extends ConsumerWidget {
                   // ─── Personal Info Preview Card ───
                   profileAsync.when(
                     loading: () => const SizedBox.shrink(),
-                    error: (_, __) => const SizedBox.shrink(),
+                    error: (_, _) => const SizedBox.shrink(),
                     data: (profile) => _PersonalInfoCard(
                       profile: profile,
                       onViewFullTap: () => context.push(AppConstants.personalInfoRoute),
@@ -64,7 +64,7 @@ class ProfileTab extends ConsumerWidget {
                   // ─── Wallet Card ───
                   walletAsync.when(
                     loading: () => const SizedBox.shrink(),
-                    error: (_, __) => const SizedBox.shrink(),
+                    error: (_, _) => const SizedBox.shrink(),
                     data: (wallet) => _WalletCard(
                       wallet: wallet,
                       onTopupTap: () => context.push(AppConstants.topupRoute),
@@ -358,7 +358,7 @@ class _AccountStatusCard extends StatelessWidget {
                     width: 14,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
-                  error: (_, __) => Text(
+                  error: (_, _) => Text(
                     l10n.noData,
                     style: TextStyle(fontSize: 12, color: context.textTertiaryColor),
                   ),
@@ -377,15 +377,15 @@ class _AccountStatusCard extends StatelessWidget {
                         return Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: AppTheme.primary.withValues(alpha: 0.1),
+                            color: context.colorScheme.primary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(AppConstants.pillRadius),
                           ),
                           child: Text(
                             title,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
-                              color: AppTheme.primary,
+                              color: context.colorScheme.primary,
                             ),
                           ),
                         );

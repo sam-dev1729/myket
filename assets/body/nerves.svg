@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 510 860 1550">
+  <g id="nerves">
+    <path d="M 541 664 L 541 806" fill="none" stroke="#D5784F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 702 C 515 720 500 738 495 762" fill="none" stroke="#D5784F" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 742 C 518 762 503 782 498 802" fill="none" stroke="#D5784F" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 702 C 567 720 582 738 587 762" fill="none" stroke="#D5784F" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 742 C 564 762 579 782 584 802" fill="none" stroke="#D5784F" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 536 806 C 500 830 440 850 392 872 C 362 888 338 915 326 958" fill="none" stroke="#D5784F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 524 818 C 476 850 432 872 404 906 C 386 928 372 950 352 968" fill="none" stroke="#D5784F" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 325 972 L 325 928 M 325 972 L 290 950 M 325 972 L 362 952 M 325 972 L 370 992 M 325 972 L 292 998" fill="none" stroke="#D5784F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="325" cy="926" r="5.5" fill="#D5784F"/>
+    <circle cx="289" cy="949" r="5.5" fill="#D5784F"/>
+    <circle cx="363" cy="951" r="5.5" fill="#D5784F"/>
+    <circle cx="371" cy="993" r="5.5" fill="#D5784F"/>
+    <circle cx="291" cy="999" r="5.5" fill="#D5784F"/>
+    <circle cx="325" cy="972" r="13" fill="#D5784F"/>
+    <circle cx="325" cy="972" r="5" fill="#EABCA7"/>
+    <path d="M 318 985 C 304 1040 288 1100 272 1160 C 255 1220 238 1290 226 1355" fill="none" stroke="#D5784F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 226 1355 L 214 1380" fill="none" stroke="#D5784F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 226 1355 L 238 1382" fill="none" stroke="#D5784F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 226 1355 L 224 1390" fill="none" stroke="#D5784F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 425 1490 C 372 1535 372 1650 376 1720 C 378 1800 372 1900 378 1975" fill="none" stroke="#D5784F" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 657 1490 C 710 1535 710 1650 706 1720 C 704 1800 710 1900 704 1975" fill="none" stroke="#D5784F" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 510 860 1550">
+  <g id="brain">
+    <path d="M 470 650 C 480 640 520 640 535 650 C 540 670 520 686 500 684 C 480 682 468 668 470 650 Z" fill="#D4917D"/>
+    <path d="M 452 610 C 450 570 490 545 540 543 C 595 540 630 575 628 620 C 625 650 595 662 560 662 C 520 665 490 655 470 640 C 458 632 453 622 452 610 Z" fill="#E8AD92"/>
+    <path d="M 480 662 L 522 664" fill="none" stroke="#C07C68" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 484 672 L 516 674" fill="none" stroke="#C07C68" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 470 600 C 490 585 505 600 520 590" fill="none" stroke="#CF8A74" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 520 565 C 535 575 545 560 560 570 C 575 580 590 565 600 580" fill="none" stroke="#CF8A74" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 540 620 C 555 610 575 625 590 615" fill="none" stroke="#CF8A74" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 480 625 C 495 635 510 625 525 632" fill="none" stroke="#CF8A74" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 560 642 C 575 647 595 642 608 630" fill="none" stroke="#CF8A74" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 540 548 C 534 570 548 590 538 614" fill="none" stroke="#CF8A74" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 470 578 C 480 568 492 562 504 558" fill="none" stroke="#CF8A74" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 585 552 C 600 556 615 566 620 580" fill="none" stroke="#CF8A74" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

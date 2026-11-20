@@ -177,7 +177,7 @@ class _CatalogSelectionSheetState extends ConsumerState<CatalogSelectionSheet> {
                           height: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Icon(Icons.add_circle_outline, color: AppTheme.primary),
+                      : Icon(Icons.add_circle_outline, color: context.colorScheme.primary),
                   onPressed: _isAdding ? null : () => _addCustomItem(l10n),
                 ),
               ],
@@ -205,7 +205,7 @@ class _CatalogSelectionSheetState extends ConsumerState<CatalogSelectionSheet> {
           CheckboxListTile(
             title: Text(l10n.iDontHaveAny, style: const TextStyle(fontWeight: FontWeight.bold)),
             value: _iDontHave,
-            activeColor: AppTheme.primary,
+            activeColor: context.colorScheme.primary,
             onChanged: _toggleDontHave,
             controlAffinity: ListTileControlAffinity.leading,
           ),
@@ -221,7 +221,7 @@ class _CatalogSelectionSheetState extends ConsumerState<CatalogSelectionSheet> {
                       return CheckboxListTile(
                         title: Text(item.name),
                         value: isSelected,
-                        activeColor: AppTheme.primary,
+                        activeColor: context.colorScheme.primary,
                         onChanged: _iDontHave ? null : (v) => _toggleItem(item, v),
                       );
                     },
@@ -243,15 +243,15 @@ class _CatalogSelectionSheetState extends ConsumerState<CatalogSelectionSheet> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primary,
+                  backgroundColor: context.colorScheme.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(AppConstants.pillRadius),
                   ),
                 ),
                 child: Text(
                   l10n.save,
-                  style: const TextStyle(
-                    color: AppTheme.black,
+                  style: TextStyle(
+                    color: context.colorScheme.onPrimary,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),

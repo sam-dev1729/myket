@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 510 860 1550">
+  <g id="nerves">
+    <path d="M 538 665 L 538 840" fill="none" stroke="#C9714F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 538 700 C 510 720 495 740 490 760" fill="none" stroke="#C9714F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 538 740 C 515 760 500 780 495 800" fill="none" stroke="#C9714F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 565 672 C 580 690 590 710 595 725" fill="none" stroke="#C9714F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 562 735 C 565 760 565 790 566 815" fill="none" stroke="#C9714F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 535 800 C 500 830 440 850 390 870 C 360 885 345 900 335 908" fill="none" stroke="#C9714F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 522 812 C 470 850 430 870 400 905 C 385 925 380 935 375 945" fill="none" stroke="#C9714F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="325" cy="970" r="12" fill="#C9714F"/>
+    <path d="M 325 970 L 325 925 M 325 970 L 288 945 M 325 970 L 365 950 M 325 970 L 372 990 M 325 970 L 365 1015 M 325 970 L 285 995" fill="none" stroke="#C9714F" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 285 995 C 275 1020 270 1030 285 1045 C 295 1055 300 1060 295 1068" fill="none" stroke="#C9714F" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 430 1490 C 372 1540 372 1650 376 1720 C 378 1800 372 1900 380 1980" fill="none" stroke="#C9714F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 650 1490 C 708 1540 708 1650 704 1720 C 702 1800 708 1900 700 1980" fill="none" stroke="#C9714F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

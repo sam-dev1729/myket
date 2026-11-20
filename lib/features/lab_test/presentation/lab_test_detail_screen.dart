@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_theme.dart';
@@ -12,17 +13,7 @@ import 'lab_test_detail_controller.dart';
 
 /// Screen that displays the full detail (header + files + categories) of a
 /// saved lab test, plus edit and delete actions.
-///
-/// Uses [labTestDetailProvider] (a `FutureProvider.family`) instead of the
-/// deprecated Riverpod-2 `FamilyAsyncNotifier`. Refresh is done via
-/// `ref.invalidate`, and the delete action is handled by the helper
-/// `deleteLabTestById` from the controller file.
-///
-/// The AppBar's edit action pushes `EditLabTestScreen` (added in PKG-002)
-/// and invalidates [labTestDetailProvider] on return, so any mutations
-/// made in the edit screen are reflected immediately.
 class LabTestDetailScreen extends ConsumerWidget {
-  /// The id of the lab test to display.
   final String id;
 
   const LabTestDetailScreen({super.key, required this.id});
@@ -44,22 +35,40 @@ class LabTestDetailScreen extends ConsumerWidget {
           onPressed: () => context.pop(),
         ),
         actions: [
-          IconButton(
-            tooltip: l10n.editButton,
-            icon: Icon(Icons.edit_outlined, color: context.iconColor),
-            onPressed: () async {
-              await context.push(AppConstants.editLabTestRouteTemplate.replaceFirst(':id', id));
-              // Refresh the detail after returning — the user may have
-              // edited categories, parameters, or the header.
-              if (context.mounted) {
-                ref.invalidate(labTestDetailProvider(id));
+          PopupMenuButton<String>(
+            icon: Icon(Icons.more_vert, color: context.iconColor),
+            onSelected: (value) async {
+              if (value == 'edit') {
+                await context.push(
+                  AppConstants.editLabTestRouteTemplate.replaceFirst(':id', id),
+                );
+                if (context.mounted) ref.invalidate(labTestDetailProvider(id));
+              } else if (value == 'delete') {
+                _confirmDelete(context, ref, l10n);
               }
             },
-          ),
-          IconButton(
-            tooltip: l10n.delete,
-            icon: const Icon(Icons.delete_outline, color: AppTheme.error),
-            onPressed: () => _confirmDelete(context, ref, l10n),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'edit',
+                child: Row(
+                  children: [
+                    const Icon(Icons.edit_outlined, size: 20),
+                    const SizedBox(width: 8),
+                    Text(l10n.editButton),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'delete',
+                child: Row(
+                  children: [
+                    const Icon(Icons.delete_outline, color: AppTheme.error, size: 20),
+                    const SizedBox(width: 8),
+                    Text(l10n.delete, style: const TextStyle(color: AppTheme.error)),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -81,30 +90,7 @@ class LabTestDetailScreen extends ConsumerWidget {
               ],
             ),
           ),
-          data: (detail) => RefreshIndicator(
-            onRefresh: () async {
-              ref.invalidate(labTestDetailProvider(id));
-              await ref.read(labTestDetailProvider(id).future);
-            },
-            child: ListView(
-              padding: const EdgeInsets.all(AppConstants.screenPadding),
-              children: [
-                _HeaderCard(detail: detail, l10n: l10n),
-                if (detail.files.isNotEmpty) ...[
-                  const SizedBox(height: AppConstants.paddingLarge),
-                  Text(
-                    l10n.labTestDetailFiles,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: AppConstants.paddingSmall),
-                  ...detail.files.map((f) => _FileTile(file: f, l10n: l10n)),
-                ],
-                const SizedBox(height: AppConstants.paddingLarge),
-                ...detail.categories.map((c) => _CategoryCard(category: c, l10n: l10n)),
-                const SizedBox(height: AppConstants.paddingXLarge),
-              ],
-            ),
-          ),
+          data: (detail) => _DetailBody(detail: detail, l10n: l10n),
         ),
       ),
     );
@@ -145,7 +131,138 @@ class LabTestDetailScreen extends ConsumerWidget {
   }
 }
 
-/// Header card that shows test date, doctor, lab, and optional address/number.
+/// The main scrollable body of the detail screen.
+class _DetailBody extends StatelessWidget {
+  final LabTestDetail detail;
+  final AppLocalizations l10n;
+
+  const _DetailBody({required this.detail, required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              // برای رفرش، می‌توانید از متد مربوطه استفاده کنید
+            },
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: AppConstants.screenPadding),
+              children: [
+                const SizedBox(height: AppConstants.paddingMedium),
+
+                // ─── 1. کارت اطلاعات هدر ───
+                _HeaderCard(detail: detail, l10n: l10n),
+                const SizedBox(height: AppConstants.paddingLarge),
+
+                // ─── 2. بخش پارامترهای استخراج شده ───
+                Text(
+                  l10n.extractedParametersLabel,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: AppConstants.paddingSmall),
+                Text(
+                  'با کلیک روی هر سطر راهنمای مربوط به پارامتر را ببینید.',
+                  style: TextStyle(fontSize: 12, color: context.textSecondaryColor),
+                ),
+                const SizedBox(height: AppConstants.paddingMedium),
+
+                // نمایش جدول برای هر دسته‌بندی
+                ...detail.categories.map((category) => _CategoryTable(
+                      category: category,
+                      l10n: l10n,
+                    )),
+
+                const SizedBox(height: AppConstants.paddingLarge),
+
+                // ─── 3. توصیه‌های دستیار پزشک ───
+                _DoctorSuggestionsSection(l10n: l10n),
+                
+                const SizedBox(height: AppConstants.paddingLarge),
+                
+                // ─── 4. بیشتر بخوانید ───
+                Text(
+                  l10n.readMore,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: AppConstants.paddingSmall),
+                Text(
+                  'مقالات زیر کمک می‌کنند اطلاعات بیشتری در مورد سلامت خود داشته باشید.',
+                  style: TextStyle(fontSize: 12, color: context.textSecondaryColor),
+                ),
+                const SizedBox(height: AppConstants.paddingMedium),
+                _ReadMoreLink(text: l10n.healthAdvice1),
+                const SizedBox(height: AppConstants.paddingSmall),
+                _ReadMoreLink(text: l10n.healthAdvice2),
+                const SizedBox(height: AppConstants.paddingSmall),
+                _ReadMoreLink(text: l10n.healthAdvice3),
+                
+                const SizedBox(height: AppConstants.paddingXLarge),
+              ],
+            ),
+          ),
+        ),
+        
+        // ─── 5. دکمه‌های پایین صفحه (ذخیره و اشتراک‌گذاری) ───
+        Container(
+          padding: const EdgeInsets.all(AppConstants.screenPadding),
+          decoration: BoxDecoration(
+            color: context.surfaceColor,
+            border: Border(top: BorderSide(color: context.appDividerColor)),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('گزارش با موفقیت ذخیره شد (Mock)')),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: context.colorScheme.primary,
+                    minimumSize: const Size(0, AppConstants.financialButtonHeight),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppConstants.pillRadius),
+                    ),
+                  ),
+                  child: Text(
+                    l10n.save,
+                    style: TextStyle(color: context.colorScheme.onPrimary, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppConstants.paddingMedium),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('اشتراک‌گذاری در نسخه‌های بعدی فعال می‌شود (Mock)')),
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: context.colorScheme.primary),
+                    minimumSize: const Size(0, AppConstants.financialButtonHeight),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppConstants.pillRadius),
+                    ),
+                  ),
+                  child: Text(
+                    l10n.shareButton,
+                    style: TextStyle(color: context.colorScheme.primary, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// کارت بالای صفحه که شامل اطلاعات هدر و فایل PDF است.
 class _HeaderCard extends StatelessWidget {
   final LabTestDetail detail;
   final AppLocalizations l10n;
@@ -164,61 +281,89 @@ class _HeaderCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _InfoRow(
-            icon: Icons.calendar_today,
-            label: l10n.testDate,
-            value: detail.testDate ?? l10n.noData,
-          ),
-          _InfoRow(
-            icon: Icons.person_outline,
-            label: l10n.doctorName,
-            value: detail.doctorName ?? l10n.noData,
-          ),
-          _InfoRow(
-            icon: Icons.local_hospital,
-            label: l10n.labName,
-            value: detail.labName ?? l10n.noData,
-          ),
+          _InfoRow(label: l10n.testTypeLabel, value: l10n.bloodTestTitle),
+          _InfoRow(label: l10n.testDate, value: _formatDate(detail.testDate, context)),
+          _InfoRow(label: l10n.doctorName, value: detail.doctorName ?? l10n.noData),
+          _InfoRow(label: l10n.labName, value: detail.labName ?? l10n.noData),
           if (detail.labAddress != null && detail.labAddress!.isNotEmpty)
-            _InfoRow(
-              icon: Icons.location_on_outlined,
-              label: l10n.labTestDetailLabAddress,
-              value: detail.labAddress!,
-            ),
+            _InfoRow(label: l10n.labTestDetailLabAddress, value: detail.labAddress!),
           if (detail.testNumber != null && detail.testNumber!.isNotEmpty)
-            _InfoRow(
-              icon: Icons.confirmation_number_outlined,
-              label: l10n.labTestDetailTestNumber,
-              value: detail.testNumber!,
+            _InfoRow(label: l10n.labTestDetailTestNumber, value: detail.testNumber!),
+            
+          if (detail.files.isNotEmpty) ...[
+            const Divider(height: 24),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: context.colorScheme.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(Icons.download, color: context.colorScheme.primary, size: 20),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    detail.files.first.originalName ?? 'فایل PDF',
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => UrlLauncherHelper.openExternal(detail.files.first.url),
+                  child: Text(l10n.labTestOpenFile),
+                ),
+              ],
             ),
+          ],
         ],
       ),
     );
   }
+
+  String _formatDate(String? iso, BuildContext context) {
+    if (iso == null || iso.isEmpty) return l10n.noData;
+    try {
+      final dt = DateTime.parse(iso);
+      if (Localizations.localeOf(context).languageCode == 'fa') {
+        final j = Jalali.fromDateTime(dt);
+        return '${j.day} ${j.formatter.mN} ${j.year}';
+      }
+      return iso;
+    } catch (_) {
+      return iso;
+    }
+  }
 }
 
-/// A single labeled row with a leading icon.
+/// یک سطر اطلاعات (برچسب و مقدار)
 class _InfoRow extends StatelessWidget {
-  final IconData icon;
   final String label;
   final String value;
 
-  const _InfoRow({required this.icon, required this.label, required this.value});
+  const _InfoRow({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppConstants.paddingTiny),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 18, color: context.textSecondaryColor),
-          const SizedBox(width: AppConstants.paddingSmall),
           SizedBox(
             width: 120,
-            child: Text(label, style: TextStyle(color: context.textSecondaryColor, fontSize: 13)),
+            child: Text(
+              '$label:',
+              style: TextStyle(color: context.textSecondaryColor, fontSize: 13),
+            ),
           ),
           Expanded(
-            child: Text(value, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+            child: Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+            ),
           ),
         ],
       ),
@@ -226,33 +371,12 @@ class _InfoRow extends StatelessWidget {
   }
 }
 
-/// A single linked file with an "open" action.
-class _FileTile extends StatelessWidget {
-  final LabTestDetailFile file;
-  final AppLocalizations l10n;
-
-  const _FileTile({required this.file, required this.l10n});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: const Icon(Icons.picture_as_pdf_outlined, color: AppTheme.error),
-      title: Text(file.originalName ?? file.id),
-      trailing: TextButton(
-        onPressed: () => UrlLauncherHelper.openExternal(file.url),
-        child: Text(l10n.labTestOpenFile),
-      ),
-    );
-  }
-}
-
-/// A category card with an expandable list of parameters.
-class _CategoryCard extends StatelessWidget {
+/// جدول نمایش پارامترهای یک دسته‌بندی
+class _CategoryTable extends StatelessWidget {
   final LabTestDetailCategory category;
   final AppLocalizations l10n;
 
-  const _CategoryCard({required this.category, required this.l10n});
+  const _CategoryTable({required this.category, required this.l10n});
 
   @override
   Widget build(BuildContext context) {
@@ -260,26 +384,52 @@ class _CategoryCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
       decoration: BoxDecoration(
         color: context.surfaceColor,
-        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        borderRadius: BorderRadius.circular(AppConstants.borderRadius),
         border: Border.all(color: context.appDividerColor),
       ),
-      child: ExpansionTile(
-        initiallyExpanded: true,
-        title: Text(
-          category.name,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-        ),
-        childrenPadding: const EdgeInsets.symmetric(
-          horizontal: AppConstants.paddingMedium,
-          vertical: AppConstants.paddingSmall,
-        ),
-        children: category.parameters.map((p) => _ParameterRow(parameter: p, l10n: l10n)).toList(),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          // هدر دسته‌بندی
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            color: context.surfaceVariantColor,
+            child: Text(
+              category.name,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            ),
+          ),
+          
+          // هدر جدول
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: context.appDividerColor)),
+            ),
+            child: Row(
+              children: [
+                Expanded(flex: 3, child: Text(l10n.parameterNameLabel, style: _headerStyle(context))),
+                Expanded(flex: 2, child: Text(l10n.parameterValueLabel, textAlign: TextAlign.center, style: _headerStyle(context))),
+                Expanded(flex: 2, child: Text(l10n.parameterUnitLabel, textAlign: TextAlign.center, style: _headerStyle(context))),
+                Expanded(flex: 3, child: Text(l10n.normalRangeLabel, textAlign: TextAlign.center, style: _headerStyle(context))),
+              ],
+            ),
+          ),
+
+          // سطرهای پارامترها
+          ...category.parameters.map((p) => _ParameterRow(parameter: p, l10n: l10n)),
+        ],
       ),
     );
   }
+
+  TextStyle _headerStyle(BuildContext context) {
+    return TextStyle(fontSize: 12, color: context.textSecondaryColor, fontWeight: FontWeight.bold);
+  }
 }
 
-/// A single parameter row showing name, value, range, and H/L badge.
+/// یک سطر از پارامترها در جدول
 class _ParameterRow extends StatelessWidget {
   final LabTestDetailParameter parameter;
   final AppLocalizations l10n;
@@ -288,60 +438,116 @@ class _ParameterRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (color, label) = _flagStyle(parameter.flag, l10n);
+    // اگر مقدار خارج از محدوده بود، رنگ آن را تغییر می‌دهیم
+    final isHigh = parameter.flag == 'H';
+    final isLow = parameter.flag == 'L';
+    final valueColor = isHigh ? AppTheme.error : (isLow ? AppTheme.info : context.textPrimaryColor);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppConstants.paddingSmall),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: context.appDividerColor, width: 0.5)),
+      ),
       child: Row(
         children: [
-          Expanded(flex: 3, child: Text(parameter.name, style: const TextStyle(fontSize: 13))),
+          Expanded(
+            flex: 3,
+            child: Text(parameter.name, style: const TextStyle(fontSize: 13)),
+          ),
           Expanded(
             flex: 2,
             child: Text(
-              parameter.value + (parameter.unit != null ? ' ${parameter.unit}' : ''),
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              parameter.value,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: valueColor),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              parameter.unit ?? '-',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12, color: context.textSecondaryColor),
             ),
           ),
           Expanded(
             flex: 3,
             child: Text(
-              _formatRange(parameter.refMin, parameter.refMax, l10n),
-              style: TextStyle(fontSize: 11, color: context.textTertiaryColor),
+              (parameter.refMin != null || parameter.refMax != null)
+                  ? '${parameter.refMin ?? '-'} - ${parameter.refMax ?? '-'}'
+                  : '-',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12, color: context.textSecondaryColor),
             ),
           ),
-          if (label != null)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: color!.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(AppConstants.pillRadius),
-              ),
-              child: Text(
-                label,
-                style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
-              ),
-            ),
         ],
       ),
     );
   }
+}
 
-  /// Returns a (color, label) pair for the H/L flag, or (null, null) when
-  /// the parameter is within range.
-  (Color?, String?) _flagStyle(String? flag, AppLocalizations l10n) {
-    switch (flag) {
-      case 'H':
-        return (AppTheme.error, l10n.labTestFlagHigh);
-      case 'L':
-        return (AppTheme.info, l10n.labTestFlagLow);
-      default:
-        return (null, null);
-    }
+/// بخش توصیه‌های پزشک با آیکون گوشی پزشکی
+class _DoctorSuggestionsSection extends StatelessWidget {
+  final AppLocalizations l10n;
+
+  const _DoctorSuggestionsSection({required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          decoration: BoxDecoration(
+            color: context.softTealBg,
+            borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.medical_services, color: AppTheme.success, size: 28),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  l10n.doctorSuggestions,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: AppConstants.paddingSmall),
+        Text(
+          l10n.doctorSuggestionsDescription,
+          style: TextStyle(fontSize: 13, height: 1.6, color: context.textSecondaryColor),
+        ),
+      ],
+    );
   }
+}
 
-  /// Formats the reference range text using the localized template.
-  String _formatRange(String? min, String? max, AppLocalizations l10n) {
-    if (min == null && max == null) return '';
-    return l10n.labTestParameterRange(min ?? '-', max ?? '-');
+/// لینک "بیشتر بخوانید"
+class _ReadMoreLink extends StatelessWidget {
+  final String text;
+
+  const _ReadMoreLink({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {},
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 13,
+          color: AppTheme.info,
+          decoration: TextDecoration.underline,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
   }
 }

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 510 860 1550">
+  <g id="stomach">
+    <path d="M 505 1225 C 495 1195 520 1185 560 1182" fill="none" stroke="#E89E7E" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 600 1095 C 650 1090 690 1120 685 1160 C 680 1200 640 1230 590 1228 C 545 1225 520 1210 520 1190 C 520 1165 540 1150 570 1150 C 600 1150 620 1130 600 1095 Z" fill="#E89E7E"/>
+    <path d="M 585 1170 C 620 1160 650 1170 670 1150" fill="none" stroke="#D98863" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 575 1195 C 610 1190 645 1195 668 1178" fill="none" stroke="#D98863" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 570 1215 C 600 1212 625 1215 650 1205" fill="none" stroke="#D98863" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

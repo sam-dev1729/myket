@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 510 860 1550">
+  <g id="bones">
+    <path d="M 541 872 C 600 858 668 868 708 908" fill="none" stroke="#F4E6D0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 872 C 482 858 414 868 374 908" fill="none" stroke="#F4E6D0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 906 C 600 892 668 902 708 946" fill="none" stroke="#F4E6D0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 906 C 482 892 414 902 374 946" fill="none" stroke="#F4E6D0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 940 C 600 926 668 936 708 984" fill="none" stroke="#F4E6D0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 940 C 482 926 414 936 374 984" fill="none" stroke="#F4E6D0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 974 C 600 960 668 970 708 1022" fill="none" stroke="#F4E6D0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 974 C 482 960 414 970 374 1022" fill="none" stroke="#F4E6D0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 1008 C 600 994 668 1004 708 1060" fill="none" stroke="#F4E6D0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 1008 C 482 994 414 1004 374 1060" fill="none" stroke="#F4E6D0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 1042 C 600 1028 668 1038 708 1098" fill="none" stroke="#F4E6D0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 541 1042 C 482 1028 414 1038 374 1098" fill="none" stroke="#F4E6D0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="535" y="850" width="12" height="132" rx="6" fill="#F4E6D0"/>
+    <path d="M 530 840 C 490 826 440 830 392 852" fill="none" stroke="#F7EBDA" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 552 840 C 592 826 642 830 690 852" fill="none" stroke="#F7EBDA" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 388 1425 C 392 1490 450 1520 541 1522 C 632 1520 690 1490 694 1425" fill="none" stroke="#F7EBDA" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="409" cy="1440" r="29" fill="#F7EBDA"/>
+    <circle cx="673" cy="1440" r="29" fill="#F7EBDA"/>
+    <path d="M 392 1455 C 398 1520 399 1580 393 1650 L 427 1650 C 421 1580 422 1520 428 1455 Z" fill="#F7EBDA"/>
+    <path d="M 690 1455 C 684 1520 683 1580 689 1650 L 655 1650 C 661 1580 660 1520 654 1455 Z" fill="#F7EBDA"/>
+    <ellipse cx="410" cy="1684" rx="38" ry="28" fill="#F7EBDA" stroke="#CBC1B3" stroke-width="2"/>
+    <ellipse cx="672" cy="1684" rx="38" ry="28" fill="#F7EBDA" stroke="#CBC1B3" stroke-width="2"/>
+    <ellipse cx="410" cy="1738" rx="34" ry="16" fill="#F7EBDA" stroke="#CBC1B3" stroke-width="2"/>
+    <ellipse cx="672" cy="1738" rx="34" ry="16" fill="#F7EBDA" stroke="#CBC1B3" stroke-width="2"/>
+    <path d="M 396 1745 C 400 1820 400 1900 396 1962 L 424 1962 C 420 1900 420 1820 424 1745 Z" fill="#F7EBDA"/>
+    <path d="M 686 1745 C 682 1820 682 1900 686 1962 L 658 1962 C 662 1900 662 1820 658 1745 Z" fill="#F7EBDA"/>
+    <path d="M 386 1752 C 382 1830 382 1900 388 1960" fill="none" stroke="#F7EBDA" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 696 1752 C 700 1830 700 1900 694 1960" fill="none" stroke="#F7EBDA" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="410" cy="1972" rx="18" ry="11" fill="#F7EBDA" stroke="#CBC1B3" stroke-width="2"/>
+    <ellipse cx="672" cy="1972" rx="18" ry="11" fill="#F7EBDA" stroke="#CBC1B3" stroke-width="2"/>
+    <ellipse cx="385" cy="2002" rx="48" ry="19" fill="#F7EBDA" stroke="#CBC1B3" stroke-width="2" transform="rotate(-6 385 2002)"/>
+    <ellipse cx="697" cy="2002" rx="48" ry="19" fill="#F7EBDA" stroke="#CBC1B3" stroke-width="2" transform="rotate(6 697 2002)"/>
+    <path d="M 352 2008 C 332 2012 312 2018 290 2026" fill="none" stroke="#F7EBDA" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 730 2008 C 750 2012 770 2018 792 2026" fill="none" stroke="#F7EBDA" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 354 2016 C 334 2022 314 2030 296 2036" fill="none" stroke="#F7EBDA" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 728 2016 C 748 2022 768 2030 786 2036" fill="none" stroke="#F7EBDA" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 358 2002 C 338 2002 318 2008 298 2016" fill="none" stroke="#F7EBDA" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 724 2002 C 744 2002 764 2008 784 2016" fill="none" stroke="#F7EBDA" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

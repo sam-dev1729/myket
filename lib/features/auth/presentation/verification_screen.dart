@@ -213,7 +213,7 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
                     length: AppConstants.otpLength,
                     defaultPinTheme: defaultPinTheme,
                     focusedPinTheme: defaultPinTheme.copyDecorationWith(
-                      border: Border.all(color: AppTheme.primary, width: 2),
+                      border: Border.all(color: context.colorScheme.primary, width: 2),
                       borderRadius: BorderRadius.circular(AppConstants.borderRadius),
                     ),
                     smsRetriever: _smsRetriever,
@@ -228,13 +228,13 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
                 child: ElevatedButton(
                   onPressed: authState.status == AuthStatus.loading ? null : _onVerifyClicked,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primary,
+                    backgroundColor: context.colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppConstants.pillRadius),
                     ),
                   ),
                   child: authState.status == AuthStatus.loading
-                      ? const CircularProgressIndicator(color: AppTheme.black)
+                      ? CircularProgressIndicator(color: context.colorScheme.onPrimary)
                       : Text(
                           l10n.verifyButton,
                           style: TextStyle(
@@ -273,7 +273,7 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
       onPressed: authState.status == AuthStatus.loading ? null : _onResendClicked,
       child: Text(
         l10n.resendCode,
-        style: const TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold),
+        style: TextStyle(color: context.colorScheme.primary, fontWeight: FontWeight.bold),
       ),
     );
   }

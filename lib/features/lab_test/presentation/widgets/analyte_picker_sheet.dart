@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/theme_extensions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../series_controller.dart';
 
@@ -63,8 +63,8 @@ class _AnalytePickerSheetState extends ConsumerState<AnalytePickerSheet> {
 
     return Container(
       height: MediaQuery.of(context).size.height * AppConstants.bottomSheetHeightFactor,
-      decoration: const BoxDecoration(
-        color: AppTheme.background,
+      decoration: BoxDecoration(
+        color: context.scaffoldColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.largeCardRadius)),
       ),
       child: Column(
@@ -75,7 +75,7 @@ class _AnalytePickerSheetState extends ConsumerState<AnalytePickerSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppTheme.textTertiary,
+                color: context.textTertiaryColor,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -97,7 +97,7 @@ class _AnalytePickerSheetState extends ConsumerState<AnalytePickerSheet> {
                 hintText: l10n.analytePickerSearchHint,
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
-                fillColor: AppTheme.cardBackground,
+                fillColor: context.surfaceVariantColor,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppConstants.borderRadius),
                   borderSide: BorderSide.none,
@@ -138,7 +138,7 @@ class _AnalytePickerSheetState extends ConsumerState<AnalytePickerSheet> {
                       },
                       title: Text(a.name),
                       subtitle: a.canonicalUnit != null ? Text(a.canonicalUnit!) : null,
-                      activeColor: AppTheme.primary,
+                      activeColor: context.colorScheme.primary,
                     );
                   },
                 );
@@ -168,7 +168,7 @@ class _AnalytePickerSheetState extends ConsumerState<AnalytePickerSheet> {
                         ? null
                         : () => Navigator.pop(context, _selected.toList()),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primary,
+                      backgroundColor: context.colorScheme.primary,
                       minimumSize: const Size(0, AppConstants.financialButtonHeight),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(AppConstants.pillRadius),
@@ -176,7 +176,7 @@ class _AnalytePickerSheetState extends ConsumerState<AnalytePickerSheet> {
                     ),
                     child: Text(
                       l10n.analytePickerSubmit,
-                      style: const TextStyle(color: AppTheme.black, fontWeight: FontWeight.bold),
+                      style: TextStyle(color: context.colorScheme.onPrimary, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),

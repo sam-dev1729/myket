@@ -95,7 +95,7 @@ class _PackageHistoryScreenState extends ConsumerState<PackageHistoryScreen> {
                 controller: _scrollController,
                 padding: const EdgeInsets.all(AppConstants.screenPadding),
                 itemCount: data.items.length + (data.hasMore ? 1 : 0),
-                separatorBuilder: (_, __) => const SizedBox(height: AppConstants.paddingMedium),
+                separatorBuilder: (_, _) => const SizedBox(height: AppConstants.paddingMedium),
                 itemBuilder: (context, index) {
                   if (index >= data.items.length) {
                     return const Padding(
@@ -165,15 +165,15 @@ class _PackageHistoryCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: AppTheme.primary.withValues(alpha: 0.1),
+                  color: context.colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   type,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.primary,
+                    color: context.colorScheme.primary,
                   ),
                 ),
               ),
@@ -181,10 +181,10 @@ class _PackageHistoryCard extends StatelessWidget {
               if (price != null)
                 Text(
                   l10n.currencyTomanWithAmount(AmountFormatter.toTomanNaked(price)),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.primary,
+                    color: context.colorScheme.primary,
                   ),
                 ),
             ],

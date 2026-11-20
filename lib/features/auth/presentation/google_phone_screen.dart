@@ -98,14 +98,14 @@ class _GooglePhoneScreenState extends ConsumerState<GooglePhoneScreen> {
                 decoration: InputDecoration(
                   labelText: l10n.phoneNumber,
                   hintText: l10n.phoneHint,
-                  prefixIcon: const Icon(Icons.phone, color: AppTheme.primary),
+                  prefixIcon: Icon(Icons.phone, color: context.colorScheme.primary),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppConstants.borderRadius),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-                    borderSide: const BorderSide(
-                      color: AppTheme.primary,
+                    borderSide: BorderSide(
+                      color: context.colorScheme.primary,
                       width: AppConstants.borderWidthFocused,
                     ),
                   ),
@@ -119,16 +119,16 @@ class _GooglePhoneScreenState extends ConsumerState<GooglePhoneScreen> {
                 child: ElevatedButton(
                   onPressed: authState.status == AuthStatus.loading ? null : _onSubmitClicked,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primary,
+                    backgroundColor: context.colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppConstants.borderRadius),
                     ),
                   ),
                   child: authState.status == AuthStatus.loading
-                      ? const CircularProgressIndicator(color: AppTheme.white)
+                      ? CircularProgressIndicator(color: context.colorScheme.onPrimary)
                       : Text(
                           l10n.sendOtp,
-                          style: context.textTheme.titleLarge?.copyWith(color: AppTheme.white),
+                          style: context.textTheme.titleLarge?.copyWith(color: context.colorScheme.onPrimary),
                         ),
                 ),
               ),

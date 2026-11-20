@@ -132,13 +132,13 @@ class _EmptyState extends StatelessWidget {
             const SizedBox(height: AppConstants.paddingLarge),
             ElevatedButton.icon(
               onPressed: onPick,
-              icon: const Icon(Icons.add, color: AppTheme.black),
+              icon: Icon(Icons.add, color: context.colorScheme.onPrimary),
               label: Text(
                 l10n.analyteSeriesPickTooltip,
-                style: const TextStyle(color: AppTheme.black, fontWeight: FontWeight.bold),
+                style: TextStyle(color: context.colorScheme.onPrimary, fontWeight: FontWeight.bold),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primary,
+                backgroundColor: context.colorScheme.primary,
                 minimumSize: const Size(0, AppConstants.financialButtonHeight),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppConstants.pillRadius),
@@ -162,12 +162,12 @@ class _MultiLineChart extends StatelessWidget {
     AppTheme.info,
     AppTheme.success,
     AppTheme.warning,
-    AppTheme.logoPurple,
     AppTheme.error,
   ];
 
   @override
   Widget build(BuildContext context) {
+    final palette = [..._palette, context.colorScheme.secondary];
     // Merge all distinct dates to build a shared X axis.
     final allDates = <String>{};
     for (final s in series) {
@@ -180,7 +180,7 @@ class _MultiLineChart extends StatelessWidget {
     final bars = <LineChartBarData>[];
     for (var i = 0; i < series.length; i++) {
       final s = series[i];
-      final color = _palette[i % _palette.length];
+      final color = palette[i % palette.length];
       final spots = <FlSpot>[];
       for (final p in s.points) {
         if (p.date == null) continue;

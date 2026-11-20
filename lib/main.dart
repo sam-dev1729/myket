@@ -9,9 +9,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/auth/session_expired_provider.dart';
 import 'core/constants/app_constants.dart';
 import 'core/router/app_router.dart';
+import 'core/theme/app_palette.dart';
 import 'core/theme/app_theme.dart';
-import 'features/settings/presentation/providers/dark_mode_provider.dart';
 import 'features/settings/presentation/providers/language_provider.dart';
+import 'features/settings/presentation/providers/theme_provider.dart';
 import 'l10n/app_localizations.dart';
 
 /// Application entry point.
@@ -91,15 +92,15 @@ class _MedicMetaverseAppState extends ConsumerState<MedicMetaverseApp> {
       }
     });
 
-    final isDarkMode = ref.watch(isDarkModeProvider);
+    final themeId = ref.watch(selectedThemeProvider);
     final locale = ref.watch(currentLocaleProvider);
 
     return MaterialApp.router(
       title: 'Medic Metaverse',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      theme: AppTheme.themeFor(themeId),
+      darkTheme: AppTheme.themeFor(AppThemeId.dark),
+      themeMode: themeId.isDark ? ThemeMode.dark : ThemeMode.light,
       routerConfig: appRouter,
       localizationsDelegates: const [
         AppLocalizations.delegate,

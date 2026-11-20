@@ -159,11 +159,11 @@ class _BuyPackageScreenState extends ConsumerState<BuyPackageScreen> {
                               padding: const EdgeInsets.all(AppConstants.paddingMedium),
                               decoration: BoxDecoration(
                                 color: isSelected
-                                    ? AppTheme.primary.withValues(alpha: 0.05)
+                                    ? context.colorScheme.primary.withValues(alpha: 0.05)
                                     : context.surfaceColor,
                                 borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                                 border: Border.all(
-                                  color: isSelected ? AppTheme.primary : context.appDividerColor,
+                                  color: isSelected ? context.colorScheme.primary : context.appDividerColor,
                                   width: isSelected ? 2 : 1,
                                 ),
                               ),
@@ -185,20 +185,20 @@ class _BuyPackageScreenState extends ConsumerState<BuyPackageScreen> {
                                         width: 24,
                                         height: 24,
                                         decoration: BoxDecoration(
-                                          color: isSelected ? AppTheme.primary : Colors.transparent,
+                                          color: isSelected ? context.colorScheme.primary : Colors.transparent,
                                           borderRadius: BorderRadius.circular(4),
                                           border: Border.all(
                                             color: isSelected
-                                                ? AppTheme.primary
+                                                ? context.colorScheme.primary
                                                 : context.textTertiaryColor,
                                             width: 2,
                                           ),
                                         ),
                                         child: isSelected
-                                            ? const Icon(
+                                            ? Icon(
                                                 Icons.check,
                                                 size: 16,
-                                                color: AppTheme.black,
+                                                color: context.colorScheme.onPrimary,
                                               )
                                             : null,
                                       ),
@@ -234,7 +234,7 @@ class _BuyPackageScreenState extends ConsumerState<BuyPackageScreen> {
 
                         walletAsync.when(
                           loading: () => const SizedBox.shrink(),
-                          error: (_, __) => const SizedBox.shrink(),
+                          error: (_, _) => const SizedBox.shrink(),
                           data: (w) {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -268,7 +268,7 @@ class _BuyPackageScreenState extends ConsumerState<BuyPackageScreen> {
                                     Switch(
                                       value: _useWallet,
                                       onChanged: (v) => setState(() => _useWallet = v),
-                                      activeColor: AppTheme.primary,
+                                      activeThumbColor: context.colorScheme.primary,
                                     ),
                                   ],
                                 ),
@@ -355,13 +355,13 @@ class _BuyPackageScreenState extends ConsumerState<BuyPackageScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _selectedPackageIds.isEmpty
                             ? context.appDividerColor
-                            : AppTheme.primary,
+                            : context.colorScheme.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(AppConstants.pillRadius),
                         ),
                       ),
                       child: loading
-                          ? const CircularProgressIndicator(color: AppTheme.black)
+                          ? CircularProgressIndicator(color: context.colorScheme.onPrimary)
                           : Text(
                               _selectedPackageIds.isEmpty
                                   ? l10n.buyPackageSubmitButton
@@ -373,7 +373,7 @@ class _BuyPackageScreenState extends ConsumerState<BuyPackageScreen> {
                               style: TextStyle(
                                 color: _selectedPackageIds.isEmpty
                                     ? context.textTertiaryColor
-                                    : AppTheme.black,
+                                    : context.colorScheme.onPrimary,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),

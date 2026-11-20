@@ -6,12 +6,13 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/trailing_arrow.dart';
 import '../../../l10n/app_localizations.dart';
-import 'providers/dark_mode_provider.dart';
 import 'providers/language_provider.dart';
+import 'providers/theme_provider.dart';
 import 'widgets/about_dialog.dart';
 import 'widgets/delete_account_dialog.dart';
 import 'widgets/language_picker_sheet.dart';
 import 'widgets/terms_dialog.dart';
+import 'widgets/theme_picker_sheet.dart';
 
 /// The Settings screen.
 ///
@@ -29,7 +30,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final isDarkMode = ref.watch(isDarkModeProvider);
+    final currentTheme = ref.watch(selectedThemeProvider);
     final currentLocale = ref.watch(currentLocaleProvider);
 
     return Scaffold(
@@ -49,11 +50,11 @@ class SettingsScreen extends ConsumerWidget {
             // ── Preferences ─────────────────────────────────
             _SettingsCard(
               children: [
-                _SwitchTile(
-                  title: l10n.darkModeLabel,
-                  icon: isDarkMode ? Icons.dark_mode : Icons.light_mode,
-                  value: isDarkMode,
-                  onChanged: (v) => ref.read(darkModeProvider.notifier).setDarkMode(enabled: v),
+                _ArrowTile(
+                  title: l10n.themeLabel,
+                  icon: Icons.palette_outlined,
+                  trailingLabel: appThemeName(currentTheme, l10n),
+                  onTap: () => ThemePickerSheet.show(context),
                 ),
                 _ArrowTile(
                   title: l10n.languageLabel,
@@ -174,31 +175,6 @@ class _SettingsCard extends StatelessWidget {
   }
 }
 
-/// A tile with an icon, label, and a trailing [Switch].
-class _SwitchTile extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final bool value;
-  final ValueChanged<bool> onChanged;
-
-  const _SwitchTile({
-    required this.title,
-    required this.icon,
-    required this.value,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return ListTile(
-      leading: Icon(icon, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
-      title: Text(title),
-      trailing: Switch(value: value, onChanged: onChanged, activeColor: AppTheme.primary),
-    );
-  }
-}
-
 /// A tile with an icon, label, optional trailing label, and a forward arrow.
 class _ArrowTile extends StatelessWidget {
   final String title;
@@ -229,11 +205,17 @@ class _ArrowTile extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (trailingLabel != null) ...[
-            Text(
-              trailingLabel!,
-              style: TextStyle(
-                fontSize: 13,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: AppConstants.themeNameMaxWidth,
+              ),
+              child: Text(
+                trailingLabel!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                ),
               ),
             ),
             const SizedBox(width: AppConstants.paddingSmall),

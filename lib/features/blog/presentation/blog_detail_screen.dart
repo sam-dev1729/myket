@@ -91,8 +91,8 @@ class _BlogPostBody extends StatelessWidget {
                   fit: BoxFit.cover,
                   // 👇 بهینه‌سازی تصویر کاور
                   memCacheWidth: 1200,
-                  placeholder: (_, __) => Container(color: context.surfaceVariantColor),
-                  errorWidget: (_, __, ___) => Container(
+                  placeholder: (_, _) => Container(color: context.surfaceVariantColor),
+                  errorWidget: (_, _, _) => Container(
                     color: context.surfaceVariantColor,
                     child: Icon(
                       Icons.image_not_supported_outlined,
@@ -133,15 +133,15 @@ class _BlogPostBody extends StatelessWidget {
                     (c) => Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
-                        color: AppTheme.primary.withValues(alpha: 0.1),
+                        color: context.colorScheme.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         c.name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
-                          color: AppTheme.primary,
+                          color: context.colorScheme.primary,
                         ),
                       ),
                     ),
@@ -172,7 +172,7 @@ class _BlogPostBody extends StatelessWidget {
               'blockquote': Style(
                 margin: Margins.symmetric(vertical: 8),
                 padding: HtmlPaddings.only(left: 12),
-                border: Border(left: BorderSide(color: AppTheme.primary, width: 3)),
+                border: Border(left: BorderSide(color: context.colorScheme.primary, width: 3)),
               ),
             },
             onLinkTap: (url, attributes, element) {

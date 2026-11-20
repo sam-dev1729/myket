@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 510 860 1550">
+  <g id="small_intestine">
+    <path d="M 494 1298 C 520 1295 548 1301 574 1298 C 586 1296 596 1298 604 1298" fill="none" stroke="#F0B97A" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 494 1298 C 520 1295 548 1301 574 1298 C 586 1296 596 1298 604 1298" fill="none" stroke="#CE9F69" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 604 1298 C 620 1298 620 1318 604 1318" fill="none" stroke="#F0B97A" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 604 1318 C 578 1321 550 1315 524 1318 C 512 1320 502 1318 494 1318" fill="none" stroke="#EBAE6B" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 604 1318 C 578 1321 550 1315 524 1318 C 512 1320 502 1318 494 1318" fill="none" stroke="#CA965C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 494 1318 C 478 1318 478 1338 494 1338" fill="none" stroke="#EBAE6B" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 494 1338 C 520 1335 548 1341 574 1338 C 586 1336 596 1338 604 1338" fill="none" stroke="#F0B97A" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 494 1338 C 520 1335 548 1341 574 1338 C 586 1336 596 1338 604 1338" fill="none" stroke="#CE9F69" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 604 1338 C 620 1338 620 1358 604 1358" fill="none" stroke="#F0B97A" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 604 1358 C 578 1361 550 1355 524 1358 C 512 1360 502 1358 494 1358" fill="none" stroke="#EBAE6B" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 604 1358 C 578 1361 550 1355 524 1358 C 512 1360 502 1358 494 1358" fill="none" stroke="#CA965C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 494 1358 C 478 1358 478 1378 494 1378" fill="none" stroke="#EBAE6B" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 494 1378 C 520 1375 548 1381 574 1378 C 586 1376 596 1378 604 1378" fill="none" stroke="#F0B97A" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 494 1378 C 520 1375 548 1381 574 1378 C 586 1376 596 1378 604 1378" fill="none" stroke="#CE9F69" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

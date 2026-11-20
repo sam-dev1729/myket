@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/theme_extensions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/profile_completeness_provider.dart';
 
@@ -31,14 +32,14 @@ class MustFillProfileScreen extends ConsumerWidget {
     });
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: context.scaffoldColor,
       appBar: AppBar(
         title: Text(l10n.mustFillProfileTitle),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppTheme.black),
+          icon: Icon(Icons.arrow_back, color: context.iconColor),
           onPressed: () => context.pop(),
         ),
       ),
@@ -51,7 +52,7 @@ class MustFillProfileScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(AppConstants.paddingLarge),
                 decoration: BoxDecoration(
-                  color: AppTheme.softTealBackground,
+                  color: context.softTealBg,
                   borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                 ),
                 child: Column(
@@ -67,7 +68,7 @@ class MustFillProfileScreen extends ConsumerWidget {
                     Text(
                       l10n.mustFillProfileDescription,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+                      style: TextStyle(fontSize: 13, color: context.textSecondaryColor),
                     ),
                   ],
                 ),
@@ -98,15 +99,15 @@ class MustFillProfileScreen extends ConsumerWidget {
                     await context.push(AppConstants.editProfileRoute);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primary,
+                    backgroundColor: context.colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppConstants.pillRadius),
                     ),
                   ),
                   child: Text(
                     l10n.mustFillProfileCta,
-                    style: const TextStyle(
-                      color: AppTheme.black,
+                    style: TextStyle(
+                      color: context.colorScheme.onPrimary,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

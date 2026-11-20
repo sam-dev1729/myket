@@ -104,13 +104,13 @@ class _PackageCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppTheme.primary.withValues(alpha: 0.1),
+                  color: context.colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   package.type,
-                  style: const TextStyle(
-                    color: AppTheme.primary,
+                  style: TextStyle(
+                    color: context.colorScheme.primary,
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
                   ),
@@ -134,8 +134,8 @@ class _PackageCard extends StatelessWidget {
               const Spacer(),
               Text(
                 l10n.currencyTomanWithAmount(AmountFormatter.toTomanNaked(package.price)),
-                style: const TextStyle(
-                  color: AppTheme.primary,
+                style: TextStyle(
+                  color: context.colorScheme.primary,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
@@ -149,10 +149,10 @@ class _PackageCard extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () => context.push(AppConstants.buyPackageRoute, extra: package.id),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primary,
+                backgroundColor: context.colorScheme.primary,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
-              child: Text(l10n.packagesBuyButton, style: const TextStyle(color: Colors.white)),
+              child: Text(l10n.packagesBuyButton, style: TextStyle(color: context.colorScheme.onPrimary)),
             ),
           ),
         ],

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/theme_extensions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../financial/presentation/package_controller.dart';
 import '../../../lab_test/data/models/lab_test_models.dart';
@@ -23,7 +24,7 @@ class BloodTestTab extends ConsumerWidget {
     final labTestsAsync = ref.watch(labTestListControllerProvider);
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: context.scaffoldColor,
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -55,12 +56,14 @@ class BloodTestTab extends ConsumerWidget {
                         } catch (_) {
                           hasPackage = false;
                         }
+                        if (!context.mounted) return;
                         if (!hasPackage) {
                           await context.push(AppConstants.emptyPackageRoute);
                           return;
                         }
                         // 3. Proceed to upload.
                         await context.push(AppConstants.uploadLabTestRoute);
+                        if (!context.mounted) return;
                         ref.read(labTestListControllerProvider.notifier).refreshList();
                       },
                     ),
@@ -155,12 +158,12 @@ class _CircleIconButton extends StatelessWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          border: Border.all(color: AppTheme.divider),
+          border: Border.all(color: context.appDividerColor),
           borderRadius: BorderRadius.circular(AppConstants.borderRadius),
         ),
         child: Stack(
           children: [
-            Center(child: Icon(icon, color: AppTheme.textPrimary, size: 20)),
+            Center(child: Icon(icon, color: context.textPrimaryColor, size: 20)),
             if (showBadge)
               Positioned(
                 top: 8,
@@ -190,9 +193,9 @@ class _UploadCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppConstants.paddingLarge),
       decoration: BoxDecoration(
-        color: AppTheme.white,
+        color: context.surfaceColor,
         borderRadius: BorderRadius.circular(AppConstants.cardRadius),
-        border: Border.all(color: AppTheme.divider),
+        border: Border.all(color: context.appDividerColor),
       ),
       child: Column(
         children: [
@@ -201,7 +204,7 @@ class _UploadCard extends StatelessWidget {
             width: 120,
             height: 120,
             decoration: BoxDecoration(
-              color: AppTheme.softRedBackground,
+              color: context.softRedBg,
               borderRadius: BorderRadius.circular(AppConstants.borderRadius),
             ),
             child: const Icon(Icons.science, size: 60, color: AppTheme.error),
@@ -213,15 +216,15 @@ class _UploadCard extends StatelessWidget {
             child: ElevatedButton(
               onPressed: onTap,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primary,
+                backgroundColor: context.colorScheme.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppConstants.pillRadius),
                 ),
               ),
               child: Text(
                 l10n.reviewAndAnalyzeTest,
-                style: const TextStyle(
-                  color: AppTheme.black,
+                style: TextStyle(
+                  color: context.colorScheme.onPrimary,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -253,9 +256,9 @@ class _LabTestCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
         padding: const EdgeInsets.all(AppConstants.paddingMedium),
         decoration: BoxDecoration(
-          color: AppTheme.white,
+          color: context.surfaceColor,
           borderRadius: BorderRadius.circular(AppConstants.cardRadius),
-          border: Border.all(color: AppTheme.divider),
+          border: Border.all(color: context.appDividerColor),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,11 +282,11 @@ class _LabTestCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: AppConstants.paddingSmall),
-                  _infoRow(Icons.local_hospital, test.labName ?? l10n.noData),
+                  _infoRow(context, Icons.local_hospital, test.labName ?? l10n.noData),
                   const SizedBox(height: AppConstants.paddingTiny),
-                  _infoRow(Icons.person, test.doctorName ?? l10n.noData),
+                  _infoRow(context, Icons.person, test.doctorName ?? l10n.noData),
                   const SizedBox(height: AppConstants.paddingTiny),
-                  _infoRow(Icons.calendar_today, test.testDate ?? l10n.noData),
+                  _infoRow(context, Icons.calendar_today, test.testDate ?? l10n.noData),
                 ],
               ),
             ),
@@ -292,10 +295,10 @@ class _LabTestCard extends StatelessWidget {
               width: AppConstants.notificationCardImageSize,
               height: AppConstants.notificationCardImageSize,
               decoration: BoxDecoration(
-                color: AppTheme.cardBackground,
+                color: context.surfaceVariantColor,
                 borderRadius: BorderRadius.circular(AppConstants.borderRadius),
               ),
-              child: const Icon(Icons.description, size: 40, color: AppTheme.textTertiary),
+              child: Icon(Icons.description, size: 40, color: context.textTertiaryColor),
             ),
           ],
         ),
@@ -303,13 +306,13 @@ class _LabTestCard extends StatelessWidget {
     );
   }
 
-  Widget _infoRow(IconData icon, String value) {
+  Widget _infoRow(BuildContext context, IconData icon, String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Text(value, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
+        Text(value, style: TextStyle(color: context.textSecondaryColor, fontSize: 13)),
         const SizedBox(width: AppConstants.paddingTiny),
-        Icon(icon, size: 16, color: AppTheme.textTertiary),
+        Icon(icon, size: 16, color: context.textTertiaryColor),
       ],
     );
   }
@@ -325,12 +328,12 @@ class _EmptyWidget extends StatelessWidget {
       padding: const EdgeInsets.all(AppConstants.paddingXLarge),
       child: Column(
         children: [
-          const Icon(Icons.science_outlined, size: 60, color: AppTheme.textTertiary),
+          Icon(Icons.science_outlined, size: 60, color: context.textTertiaryColor),
           const SizedBox(height: AppConstants.paddingMedium),
           Text(
             l10n.noLabTestsFound,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 16, color: AppTheme.textSecondary),
+            style: TextStyle(fontSize: 16, color: context.textSecondaryColor),
           ),
         ],
       ),

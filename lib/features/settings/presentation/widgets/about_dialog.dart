@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/theme_extensions.dart';
 import '../../../../l10n/app_localizations.dart';
 
 /// Dialog that displays the app's "About Us" content.
@@ -30,7 +30,7 @@ class AboutDialogWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.biotech, color: AppTheme.logoPurple, size: 40),
+                Icon(Icons.biotech, color: context.colorScheme.secondary, size: 40),
                 const SizedBox(width: AppConstants.paddingSmall),
                 Expanded(
                   child: Text(

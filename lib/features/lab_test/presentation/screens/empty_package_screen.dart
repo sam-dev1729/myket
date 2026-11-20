@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/theme_extensions.dart';
 import '../../../../l10n/app_localizations.dart';
 
 /// Screen shown when the user tries a flow that requires an active package
@@ -16,14 +17,14 @@ class EmptyPackageScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: context.scaffoldColor,
       appBar: AppBar(
         title: Text(l10n.emptyPackageTitle),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppTheme.black),
+          icon: Icon(Icons.arrow_back, color: context.iconColor),
           onPressed: () => context.pop(),
         ),
       ),
@@ -44,7 +45,7 @@ class EmptyPackageScreen extends ConsumerWidget {
               Text(
                 l10n.emptyPackageDescription,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 14, color: AppTheme.textSecondary),
+                style: TextStyle(fontSize: 14, color: context.textSecondaryColor),
               ),
               const SizedBox(height: AppConstants.paddingXLarge),
               SizedBox(
@@ -53,15 +54,15 @@ class EmptyPackageScreen extends ConsumerWidget {
                 child: ElevatedButton(
                   onPressed: () => context.push(AppConstants.packagesRoute),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primary,
+                    backgroundColor: context.colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppConstants.pillRadius),
                     ),
                   ),
                   child: Text(
                     l10n.emptyPackageCta,
-                    style: const TextStyle(
-                      color: AppTheme.black,
+                    style: TextStyle(
+                      color: context.colorScheme.onPrimary,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

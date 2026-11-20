@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 510 860 1550">
+  <g id="liver">
+    <path d="M 410 1090 C 480 1075 570 1072 612 1085 C 612 1130 570 1160 530 1160 C 490 1170 450 1215 420 1220 C 395 1215 390 1170 392 1130 C 395 1105 400 1095 410 1090 Z" fill="#A38074"/>
+    <path d="M 485 1098 C 500 1130 520 1150 545 1160" fill="none" stroke="#8C6A60" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 410 1130 C 440 1120 470 1125 490 1140" fill="none" stroke="#B79388" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
