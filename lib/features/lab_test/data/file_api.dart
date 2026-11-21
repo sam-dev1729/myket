@@ -19,11 +19,16 @@ abstract class FileApi {
   /// Uses multipart form data, sending both the offset and the file chunk.
   @PUT('${AppConstants.fileUploadBaseEndpoint}/{upload_id}')
   @MultiPart() // 👈 تغییر یافت: M و P بزرگ
-  Future<ApiResponse<void>> uploadChunk(
+  Future<ApiResponse<UploadChunkResponse>> uploadChunk(
     @Path('upload_id') String uploadId,
     @Part(name: 'offset') int offset,
     @Part(name: 'chunk') MultipartFile chunk,
   );
+
+  /// Returns the status of an upload session, including the number of bytes
+  /// already received (used to resume an interrupted upload).
+  @GET('${AppConstants.fileUploadBaseEndpoint}/{upload_id}')
+  Future<ApiResponse<UploadStatus>> getUploadStatus(@Path('upload_id') String uploadId);
 
   /// Completes the upload session and promotes it to a permanent file.
   @POST('${AppConstants.fileUploadBaseEndpoint}/{upload_id}/complete')

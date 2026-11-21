@@ -9,6 +9,8 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../financial/presentation/package_controller.dart';
 import '../../../lab_test/data/models/lab_test_models.dart';
 import '../../../lab_test/presentation/lab_test_list_controller.dart';
+import '../../../lab_test/presentation/utils/lab_date_format.dart';
+import '../../../lab_test/presentation/widgets/analysis_actions_sheet.dart';
 import '../../../profile/presentation/providers/profile_completeness_provider.dart';
 
 /// The Blood Test tab showing saved lab tests and an upload CTA.
@@ -17,19 +19,36 @@ import '../../../profile/presentation/providers/profile_completeness_provider.da
 /// 1. If the profile is incomplete → redirects to [MustFillProfileScreen].
 /// 2. If the user has no active package → redirects to [EmptyPackageScreen].
 class BloodTestTab extends ConsumerWidget {
-  const BloodTestTab({super.key});
+  const BloodTestTab({super.key, this.showBackButton = false});
+
+  /// Whether to show an app bar with a back button (when pushed as a route)
+  /// instead of the tab's icon bar.
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final labTestsAsync = ref.watch(labTestListControllerProvider);
 
     return Scaffold(
       backgroundColor: context.scaffoldColor,
+      appBar: showBackButton
+          ? AppBar(
+              title: Text(l10n.bloodAndUrineTest),
+              centerTitle: true,
+              backgroundColor: AppTheme.transparent,
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back, color: context.iconColor),
+                onPressed: () => context.pop(),
+              ),
+            )
+          : null,
       body: SafeArea(
         bottom: false,
         child: Column(
           children: [
-            const _TopIconBar(),
+            if (!showBackButton) const _TopIconBar(),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () => ref.read(labTestListControllerProvider.notifier).refreshList(),
@@ -38,34 +57,7 @@ class BloodTestTab extends ConsumerWidget {
                   children: [
                     const SizedBox(height: AppConstants.paddingMedium),
                     _UploadCard(
-                      onTap: () async {
-                        // 1. Profile completeness gate.
-                        final completeness = ref.read(profileCompletenessProvider);
-                        if (!completeness.isComplete) {
-                          await context.push(
-                            AppConstants.mustFillProfileRoute,
-                            extra: AppConstants.uploadLabTestRoute,
-                          );
-                          return;
-                        }
-                        // 2. Active package gate.
-                        bool hasPackage = false;
-                        try {
-                          final packages = await ref.read(activeUserPackagesProvider.future);
-                          hasPackage = packages.isNotEmpty;
-                        } catch (_) {
-                          hasPackage = false;
-                        }
-                        if (!context.mounted) return;
-                        if (!hasPackage) {
-                          await context.push(AppConstants.emptyPackageRoute);
-                          return;
-                        }
-                        // 3. Proceed to upload.
-                        await context.push(AppConstants.uploadLabTestRoute);
-                        if (!context.mounted) return;
-                        ref.read(labTestListControllerProvider.notifier).refreshList();
-                      },
+                      onTap: () => AnalysisActionsSheet.show(context),
                     ),
                     const SizedBox(height: AppConstants.paddingLarge),
                     labTestsAsync.when(
@@ -102,6 +94,8 @@ class BloodTestTab extends ConsumerWidget {
                         );
                       },
                     ),
+                    const SizedBox(height: AppConstants.paddingMedium),
+                    _AddTestButton(onTap: () => _startUploadFlow(context, ref)),
                     const SizedBox(height: AppConstants.paddingXLarge),
                   ],
                 ),
@@ -263,34 +257,6 @@ class _LabTestCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        tooltip: l10n.moreOptions,
-                        onPressed: () {},
-                        icon: const Icon(Icons.more_vert),
-                      ),
-                      Text(
-                        l10n.labTestCardTitle(number),
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: AppConstants.paddingSmall),
-                  _infoRow(context, Icons.local_hospital, test.labName ?? l10n.noData),
-                  const SizedBox(height: AppConstants.paddingTiny),
-                  _infoRow(context, Icons.person, test.doctorName ?? l10n.noData),
-                  const SizedBox(height: AppConstants.paddingTiny),
-                  _infoRow(context, Icons.calendar_today, test.testDate ?? l10n.noData),
-                ],
-              ),
-            ),
-            const SizedBox(width: AppConstants.paddingMedium),
             Container(
               width: AppConstants.notificationCardImageSize,
               height: AppConstants.notificationCardImageSize,
@@ -300,6 +266,40 @@ class _LabTestCard extends StatelessWidget {
               ),
               child: Icon(Icons.description, size: 40, color: context.textTertiaryColor),
             ),
+            const SizedBox(width: AppConstants.paddingMedium),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          l10n.labTestCardTitle(number),
+                          textAlign: TextAlign.start,
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      IconButton(
+                        tooltip: l10n.moreOptions,
+                        onPressed: () {},
+                        icon: const Icon(Icons.more_vert),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppConstants.paddingSmall),
+                  _infoRow(context, Icons.local_hospital, test.labName ?? l10n.noData),
+                  const SizedBox(height: AppConstants.paddingTiny),
+                  _infoRow(context, Icons.person, test.doctorName ?? l10n.noData),
+                  const SizedBox(height: AppConstants.paddingTiny),
+                  _infoRow(
+                    context,
+                    Icons.calendar_today,
+                    formatLabTestDate(context, test.testDate, fallback: l10n.noData),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -308,11 +308,18 @@ class _LabTestCard extends StatelessWidget {
 
   Widget _infoRow(BuildContext context, IconData icon, String value) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Text(value, style: TextStyle(color: context.textSecondaryColor, fontSize: 13)),
-        const SizedBox(width: AppConstants.paddingTiny),
         Icon(icon, size: 16, color: context.textTertiaryColor),
+        const SizedBox(width: AppConstants.paddingTiny + 2),
+        Expanded(
+          child: Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.start,
+            style: TextStyle(color: context.textSecondaryColor, fontSize: 13),
+          ),
+        ),
       ],
     );
   }
@@ -358,6 +365,78 @@ class _ErrorWidget extends StatelessWidget {
           const SizedBox(height: AppConstants.paddingMedium),
           TextButton(onPressed: onRetry, child: Text(l10n.retry)),
         ],
+      ),
+    );
+  }
+}
+
+/// Applies the profile/package gates and opens the upload screen.
+///
+/// The file itself is picked inside [UploadLabTestScreen] so the selected
+/// file can be kept there across failures.
+Future<void> _startUploadFlow(BuildContext context, WidgetRef ref) async {
+  final completeness = ref.read(profileCompletenessProvider);
+  if (!completeness.isComplete) {
+    await context.push(
+      AppConstants.mustFillProfileRoute,
+      extra: AppConstants.uploadLabTestRoute,
+    );
+    return;
+  }
+
+  bool hasPackage = false;
+  try {
+    final packages = await ref.read(activeUserPackagesProvider.future);
+    hasPackage = packages.isNotEmpty;
+  } catch (_) {
+    hasPackage = false;
+  }
+  if (!context.mounted) return;
+  if (!hasPackage) {
+    await context.push(AppConstants.emptyPackageRoute);
+    return;
+  }
+
+  await context.push(AppConstants.uploadLabTestRoute);
+  if (!context.mounted) return;
+  ref.read(labTestListControllerProvider.notifier).refreshList();
+}
+
+/// Dashed "add lab test" button shown below the saved tests.
+class _AddTestButton extends StatelessWidget {
+  const _AddTestButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+        child: Container(
+          height: AppConstants.financialButtonHeight,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+            border: Border.all(color: context.appDividerColor),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.add_circle_outline, color: context.colorScheme.primary),
+              const SizedBox(width: AppConstants.paddingSmall),
+              Text(
+                l10n.addLabTestButton,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: context.textPrimaryColor,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

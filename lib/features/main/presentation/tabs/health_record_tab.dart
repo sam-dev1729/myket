@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +8,7 @@ import '../../../../core/theme/theme_extensions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../lab_test/data/models/lab_test_models.dart';
 import '../../../lab_test/presentation/health_overview_provider.dart';
+import '../../../lab_test/presentation/widgets/health_gauge.dart';
 import '../../../lab_test/presentation/widgets/human_body_view.dart';
 
 // ─────────────────────────────────────────────────────────────
@@ -247,16 +246,9 @@ class _OverviewBody extends StatelessWidget {
           ),
           child: Column(
             children: [
-              SizedBox(
-                width: AppConstants.healthGaugeSize,
-                height: AppConstants.healthGaugeSize * 0.75,
-                child: CustomPaint(
-                  painter: _HealthGaugePainter(
-                    value: gaugeValue,
-                    strokeWidth: AppConstants.healthGaugeStrokeWidth,
-                    tickColor: context.textTertiaryColor,
-                  ),
-                ),
+              HealthGauge(
+                value: gaugeValue,
+                tickColor: context.textTertiaryColor,
               ),
               const SizedBox(height: AppConstants.paddingSmall),
               Text(
@@ -600,81 +592,5 @@ class _SectionTitle extends StatelessWidget {
       textAlign: TextAlign.start,
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: context.textPrimaryColor),
     );
-  }
-}
-
-class _HealthGaugePainter extends CustomPainter {
-  final double value;
-  final double strokeWidth;
-  final Color tickColor;
-
-  _HealthGaugePainter({
-    required this.value,
-    required this.strokeWidth,
-    required this.tickColor,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height);
-    final radius = math.min(size.width / 2, size.height) - strokeWidth / 2;
-    const startAngle = math.pi;
-    const sweepAngle = math.pi;
-
-    const segments = [
-      (AppTheme.gaugeGreen, 0.0, 0.5),
-      (AppTheme.gaugeYellow, 0.5, 0.75),
-      (AppTheme.gaugeRed, 0.75, 1.0),
-    ];
-    for (final (color, start, end) in segments) {
-      final paint = Paint()
-        ..color = color
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = strokeWidth
-        ..strokeCap = StrokeCap.butt;
-      canvas.drawArc(
-        Rect.fromCircle(center: center, radius: radius),
-        startAngle + sweepAngle * start,
-        sweepAngle * (end - start),
-        false,
-        paint,
-      );
-    }
-
-    final tickPaint = Paint()
-      ..color = tickColor
-      ..strokeWidth = 2;
-    for (int i = 0; i <= 8; i++) {
-      final t = i / 8;
-      final angle = startAngle + sweepAngle * t;
-      final outer = Offset(
-        center.dx + (radius - strokeWidth / 2 - 4) * math.cos(angle),
-        center.dy + (radius - strokeWidth / 2 - 4) * math.sin(angle),
-      );
-      final inner = Offset(
-        center.dx + (radius - strokeWidth / 2 - 12) * math.cos(angle),
-        center.dy + (radius - strokeWidth / 2 - 12) * math.sin(angle),
-      );
-      canvas.drawLine(inner, outer, tickPaint);
-    }
-
-    final needleAngle = startAngle + sweepAngle * value;
-    final needleEnd = Offset(
-      center.dx + (radius - strokeWidth - 12) * math.cos(needleAngle),
-      center.dy + (radius - strokeWidth - 12) * math.sin(needleAngle),
-    );
-    final needlePaint = Paint()
-      ..color = AppTheme.gaugeNeedle
-      ..strokeWidth = 4
-      ..strokeCap = StrokeCap.round;
-    canvas.drawLine(center, needleEnd, needlePaint);
-
-    canvas.drawCircle(center, 6, Paint()..color = AppTheme.gaugeNeedle);
-    canvas.drawCircle(center, 3, Paint()..color = Colors.white);
-  }
-
-  @override
-  bool shouldRepaint(covariant _HealthGaugePainter oldDelegate) {
-    return oldDelegate.value != value || oldDelegate.tickColor != tickColor;
   }
 }

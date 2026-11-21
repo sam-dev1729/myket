@@ -87,9 +87,20 @@ class ExtractedLabTest {
   final String? doctorName;
   @JsonKey(name: 'lab_name')
   final String? labName;
+  @JsonKey(name: 'lab_address')
+  final String? labAddress;
+  @JsonKey(name: 'test_number')
+  final String? testNumber;
   final List<ExtractedCategory>? categories;
 
-  const ExtractedLabTest({this.testDate, this.doctorName, this.labName, this.categories});
+  const ExtractedLabTest({
+    this.testDate,
+    this.doctorName,
+    this.labName,
+    this.labAddress,
+    this.testNumber,
+    this.categories,
+  });
 
   factory ExtractedLabTest.fromJson(Map<String, dynamic> json) => _$ExtractedLabTestFromJson(json);
   Map<String, dynamic> toJson() => _$ExtractedLabTestToJson(this);

@@ -10,6 +10,8 @@ import '../../../core/utils/url_launcher_helper.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/models/lab_test_models.dart';
 import 'lab_test_detail_controller.dart';
+import 'utils/report_exporter.dart';
+import 'widgets/export_actions_bar.dart';
 
 /// Screen that displays the full detail (header + files + categories) of a
 /// saved lab test, plus edit and delete actions.
@@ -140,6 +142,12 @@ class _DetailBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final reportText = ReportExporter.buildLabTestDetailText(
+      l10n: l10n,
+      detail: detail,
+      formattedDate: _formatDate(context, detail.testDate),
+    );
+
     return Column(
       children: [
         Expanded(
@@ -204,61 +212,29 @@ class _DetailBody extends StatelessWidget {
           ),
         ),
         
-        // ─── 5. دکمه‌های پایین صفحه (ذخیره و اشتراک‌گذاری) ───
-        Container(
-          padding: const EdgeInsets.all(AppConstants.screenPadding),
-          decoration: BoxDecoration(
-            color: context.surfaceColor,
-            border: Border(top: BorderSide(color: context.appDividerColor)),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('گزارش با موفقیت ذخیره شد (Mock)')),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: context.colorScheme.primary,
-                    minimumSize: const Size(0, AppConstants.financialButtonHeight),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppConstants.pillRadius),
-                    ),
-                  ),
-                  child: Text(
-                    l10n.save,
-                    style: TextStyle(color: context.colorScheme.onPrimary, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              const SizedBox(width: AppConstants.paddingMedium),
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('اشتراک‌گذاری در نسخه‌های بعدی فعال می‌شود (Mock)')),
-                    );
-                  },
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: context.colorScheme.primary),
-                    minimumSize: const Size(0, AppConstants.financialButtonHeight),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppConstants.pillRadius),
-                    ),
-                  ),
-                  child: Text(
-                    l10n.shareButton,
-                    style: TextStyle(color: context.colorScheme.primary, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ],
-          ),
+        ExportActionsBar(
+          text: reportText,
+          fileName: 'lab-test-${detail.id}.txt',
+          shareSubject: l10n.labTestDetailTitle,
+          l10n: l10n,
         ),
       ],
     );
+  }
+
+  /// Formats [iso] for display (Jalali for Persian).
+  String _formatDate(BuildContext context, String? iso) {
+    if (iso == null || iso.isEmpty) return l10n.noData;
+    try {
+      final date = DateTime.parse(iso);
+      if (Localizations.localeOf(context).languageCode == 'fa') {
+        final jalali = Jalali.fromDateTime(date);
+        return '${jalali.day} ${jalali.formatter.mN} ${jalali.year}';
+      }
+      return iso;
+    } catch (_) {
+      return iso;
+    }
   }
 }
 
@@ -497,32 +473,43 @@ class _DoctorSuggestionsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          decoration: BoxDecoration(
-            color: context.softTealBg,
-            borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.medical_services, color: AppTheme.success, size: 28),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  l10n.doctorSuggestions,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+        InkWell(
+          onTap: () => context.push(AppConstants.doctorAdviceRoute),
+          borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            decoration: BoxDecoration(
+              color: context.softTealBg,
+              borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.medical_services, color: AppTheme.success, size: 28),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    l10n.doctorSuggestions,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         const SizedBox(height: AppConstants.paddingSmall),
         Text(
           l10n.doctorSuggestionsDescription,
           style: TextStyle(fontSize: 13, height: 1.6, color: context.textSecondaryColor),
+        ),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: TextButton(
+            onPressed: () => context.push(AppConstants.doctorAdviceRoute),
+            child: Text(l10n.viewAllAdvice),
+          ),
         ),
       ],
     );
@@ -538,7 +525,7 @@ class _ReadMoreLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => context.push(AppConstants.blogListRoute),
       child: Text(
         text,
         style: const TextStyle(

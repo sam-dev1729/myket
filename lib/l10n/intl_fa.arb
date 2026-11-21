@@ -193,7 +193,7 @@
   "googleAccountLinkedSuccess": "حساب گوگل با موفقیت متصل شد",
   "googleAccountDetachedSuccess": "اتصال حساب گوگل قطع شد",
   "uploadLabTest": "آپلود آزمایش",
-  "selectFile": "انتخاب فایل آزمایش (PDF)",
+  "selectFile": "انتخاب فایل آزمایش",
   "uploadingFile": "در حال آپلود فایل...",
   "extractingData": "در حال تحلیل با هوش مصنوعی...",
   "extractionSuccess": "اطلاعات آزمایش با موفقیت استخراج شد",
@@ -548,5 +548,140 @@
   "themeHealing": "آبی شفا و نارنجی پویا",
   "themeTeal": "فیروزه‌ای حامی و مرجانی خلاق",
   "themeClassic": "کلاسیک نئون",
-  "themeDark": "شبانه"
+  "themeDark": "شبانه",
+  "analysisActionsTitle": "بررسی و تحلیل آزمایش",
+  "analysisReportAction": "گزارش کلی سلامت",
+  "analysisCompareAction": "مقایسه چند آزمایش",
+  "analysisTrendAction": "تغییرات در طول زمان",
+  "close": "بستن",
+  "uploadSheetTitle": "بارگذاری آزمایش",
+  "uploadPdfSource": "فایل PDF",
+  "uploadCameraSource": "دوربین",
+  "uploadGallerySource": "گالری",
+  "uploadFileButton": "آپلود فایل",
+  "chooseAnotherFile": "انتخاب فایل دیگر",
+  "retryUpload": "تلاش مجدد آپلود",
+  "retryAnalysis": "تلاش مجدد تحلیل",
+  "uploadAttempt": "تلاش {attempt} از {maxAttempts}",
+  "@uploadAttempt": {
+    "placeholders": {
+      "attempt": {
+        "type": "int"
+      },
+      "maxAttempts": {
+        "type": "int"
+      }
+    }
+  },
+  "fileSizeMb": "{size} مگابایت",
+  "@fileSizeMb": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "filePickFailed": "انتخاب فایل انجام نشد.",
+  "analysisRetryHint": "فایل شما آپلود شده است؛ فقط تحلیل دوباره انجام می‌شود.",
+  "resumeUploadButton": "ادامه آپلود",
+  "resumeUploadHint": "ادامه آپلود قبلی از {percent}٪",
+  "@resumeUploadHint": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "addLabTestButton": "افزودن آزمایش",
+  "healthReportTitle": "گزارش کلی سلامت",
+  "reportDateLabel": "تاریخ گزارش",
+  "reportAnalyzedTestsLabel": "تعداد آزمایش‌های تحلیل‌شده",
+  "reportAnalyzedTests": "{count} آزمایش",
+  "@reportAnalyzedTests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importantParametersLabel": "پارامترهای مهم",
+  "importantParametersHint": "توجه: پارامترهایی که این علامت را دارند بر اساس آزمایش‌های قدیمی لحاظ شده‌اند و نیاز به نتایج جدیدتر دارند.",
+  "viewAllAdvice": "مشاهده همه توصیه‌ها",
+  "doctorAdviceTitle": "توصیه‌های دستیار پزشک",
+  "askAiTitle": "سوالات بیشتری دارید؟",
+  "askAiSubtitle": "از هوش مصنوعی بپرسید",
+  "aiAssistantTitle": "گفتگو با دستیار هوش مصنوعی",
+  "aiDisclaimer": "جواب‌های هوش مصنوعی جایگزین مراجعه به پزشک نیستند. قبل از هر اقدامی از متخصصین راهنمایی لازم را کسب کنید.",
+  "aiInputHint": "چیزی بپرسید",
+  "aiGreeting": "سلام! من دستیار هوش مصنوعی سلامت شما هستم. نتایج آزمایش‌های اخیر شما را تحلیل کرده‌ام. چطور می‌توانم کمک کنم؟",
+  "aiGreetingStatus": "وضعیت کلی سلامت شما: {status}",
+  "@aiGreetingStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "aiMarkerAnswer": "مقدار {name} شما {value} {unit} است (محدوده نرمال: {range}). وضعیت: {status}.",
+  "@aiMarkerAnswer": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "aiOverallAnswer": "وضعیت کلی سلامت شما {status} است و {abnormal} پارامتر خارج از محدوده نرمال دارید.",
+  "@aiOverallAnswer": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "abnormal": {
+        "type": "int"
+      }
+    }
+  },
+  "aiAdviceIntro": "بر اساس وضعیت فعلی، این موارد را در نظر بگیرید:",
+  "aiFallbackAnswer": "برای پاسخ دقیق‌تر، نام یک پارامتر آزمایش (مثل قند، کلسترول یا هموگلوبین) یا وضعیت کلی سلامت را بپرسید.",
+  "aiFallbackAnswerWithMarkers": "من می‌توانم درباره این پارامترها توضیح بدهم: {markers}. نام پارامتر یا وضعیت کلی سلامت را بپرسید.",
+  "@aiFallbackAnswerWithMarkers": {
+    "placeholders": {
+      "markers": {
+        "type": "String"
+      }
+    }
+  },
+  "compareTestsTitle": "مقایسه چند آزمایش",
+  "compareSelectionTitle": "چند آزمایش را انتخاب کنید",
+  "compareSelectionHint": "از بین آزمایش‌های زیر حداکثر سه مورد را انتخاب کنید. نتایج در یک جدول در کنار هم نمایش داده می‌شود.",
+  "compareAction": "مقایسه",
+  "compareMaxSelection": "حداکثر سه آزمایش قابل انتخاب است.",
+  "compareResultTitle": "مقایسه {count} آزمایش",
+  "@compareResultTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "compareNoCommonParameters": "پارامتر مشترکی برای مقایسه پیدا نشد.",
+  "downloadReportButton": "دانلود گزارش",
+  "reportSavedSuccess": "گزارش با موفقیت ذخیره شد.",
+  "reportDownloadFailed": "ذخیره گزارش انجام نشد.",
+  "reportShareFailed": "اشتراک‌گذاری گزارش انجام نشد.",
+  "readMoreDescription": "مقالات زیر کمک می‌کنند اطلاعات بیشتری در مورد سلامت خود داشته باشید.",
+  "viewHealthReport": "مشاهده گزارش سلامت",
+  "viewLabTests": "مشاهده آزمایش‌ها"
 }

@@ -47,7 +47,7 @@ class HomeTab extends ConsumerWidget {
                       backgroundColor: context.softRedBg,
                       borderColor: context.softRedBd,
                       isActive: false,
-                      onTap: () => context.push(AppConstants.uploadLabTestRoute),
+                      onTap: () => context.push(AppConstants.bloodTestsRoute),
                     ),
                     const SizedBox(height: AppConstants.paddingMedium),
                     _FeatureCard(
@@ -237,11 +237,19 @@ class _FeatureCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            TrailingArrow(color: context.iconColor, size: 20),
+            Container(
+              width: AppConstants.iconContainerSize,
+              height: AppConstants.iconContainerSize,
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+              ),
+              child: Icon(icon, color: iconColor, size: 28),
+            ),
             const SizedBox(width: AppConstants.paddingMedium),
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
@@ -263,15 +271,7 @@ class _FeatureCard extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppConstants.paddingMedium),
-            Container(
-              width: AppConstants.iconContainerSize,
-              height: AppConstants.iconContainerSize,
-              decoration: BoxDecoration(
-                color: iconColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-              ),
-              child: Icon(icon, color: iconColor, size: 28),
-            ),
+            TrailingArrow(color: context.iconColor, size: 20),
           ],
         ),
       ),

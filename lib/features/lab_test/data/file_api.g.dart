@@ -54,7 +54,7 @@ class _FileApi implements FileApi {
   }
 
   @override
-  Future<ApiResponse<void>> uploadChunk(
+  Future<ApiResponse<UploadChunkResponse>> uploadChunk(
     String uploadId,
     int offset,
     MultipartFile chunk,
@@ -65,7 +65,7 @@ class _FileApi implements FileApi {
     final _data = FormData();
     _data.fields.add(MapEntry('offset', offset.toString()));
     _data.files.add(MapEntry('chunk', chunk));
-    final _options = _setStreamType<ApiResponse<void>>(
+    final _options = _setStreamType<ApiResponse<UploadChunkResponse>>(
       Options(
             method: 'PUT',
             headers: _headers,
@@ -81,9 +81,42 @@ class _FileApi implements FileApi {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponse<void> _value;
+    late ApiResponse<UploadChunkResponse> _value;
     try {
-      _value = ApiResponse<void>.fromJson(_result.data!, (json) => () {}());
+      _value = ApiResponse<UploadChunkResponse>.fromJson(
+        _result.data!,
+        (json) => UploadChunkResponse.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ApiResponse<UploadStatus>> getUploadStatus(String uploadId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<ApiResponse<UploadStatus>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/file/upload/${uploadId}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponse<UploadStatus> _value;
+    try {
+      _value = ApiResponse<UploadStatus>.fromJson(
+        _result.data!,
+        (json) => UploadStatus.fromJson(json as Map<String, dynamic>),
+      );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

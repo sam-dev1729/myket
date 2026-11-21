@@ -115,6 +115,24 @@ void main() {
       expect(adapter.lastRequest?.headers[AppConstants.headerAuthorization], isNull);
       container.dispose();
     });
+
+    test('should use the 90s AI timeout for /lab-test/extract', () async {
+      when(() => mockTokenStorage.getAccessToken()).thenAnswer((_) async => 'token');
+
+      final container = createContainer();
+      final client = container.read(apiClientProvider);
+
+      final adapter = MockHttpAdapter((_) async => jsonSuccess());
+      client.dio.httpClientAdapter = adapter;
+
+      await client.dio.post(AppConstants.labTestExtractEndpoint, data: {});
+
+      expect(
+        adapter.lastRequest?.receiveTimeout,
+        const Duration(seconds: AppConstants.aiAnalysisTimeoutSeconds),
+      );
+      container.dispose();
+    });
   });
 
   group('ApiClient - Error Mapping', () {

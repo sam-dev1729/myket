@@ -39,6 +39,11 @@ class FileHandler extends MockHandler {
       if (m != null) return _handleChunk(m.group(1)!, options);
     }
 
+    if (method == 'GET') {
+      final m = _uploadPattern.firstMatch(path);
+      if (m != null) return _handleStatus(m.group(1)!);
+    }
+
     if (method == 'DELETE') {
       final m = _uploadPattern.firstMatch(path);
       if (m != null) return _handleAbort(m.group(1)!);
@@ -73,6 +78,33 @@ class FileHandler extends MockHandler {
       'chunk_size': 8388608, // 8 MB — matches backend default
       'total_size': totalSize,
       'received_bytes': 0,
+      'expires_at': DateTime.now().add(const Duration(hours: 1)).toUtc().toIso8601String(),
+    });
+  }
+
+  // ──────────────────────────────────────────────────────────
+  // Status (resume support)
+  // ──────────────────────────────────────────────────────────
+
+  ResponseBody _handleStatus(String uploadId) {
+    final storage = MockStorage.instance..ensureSeeded();
+    final session = storage.uploadSessions[uploadId];
+    if (session == null) {
+      return mockError(
+        statusCode: 404,
+        code: 'UPLOAD_SESSION_NOT_FOUND',
+        message: 'Upload session not found',
+      );
+    }
+
+    return mockSuccess({
+      'upload_id': uploadId,
+      'name': session.name,
+      'source': 'LAB_TEST',
+      'status': session.completed ? 'COMPLETED' : 'PENDING',
+      'total_size': session.totalSize,
+      'received_bytes': session.receivedBytes,
+      'chunk_size': 8388608,
       'expires_at': DateTime.now().add(const Duration(hours: 1)).toUtc().toIso8601String(),
     });
   }

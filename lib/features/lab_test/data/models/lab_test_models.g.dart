@@ -75,6 +75,8 @@ ExtractedLabTest _$ExtractedLabTestFromJson(Map<String, dynamic> json) =>
       testDate: json['test_date'] as String?,
       doctorName: json['doctor_name'] as String?,
       labName: json['lab_name'] as String?,
+      labAddress: json['lab_address'] as String?,
+      testNumber: json['test_number'] as String?,
       categories: (json['categories'] as List<dynamic>?)
           ?.map((e) => ExtractedCategory.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -85,6 +87,8 @@ Map<String, dynamic> _$ExtractedLabTestToJson(ExtractedLabTest instance) =>
       'test_date': instance.testDate,
       'doctor_name': instance.doctorName,
       'lab_name': instance.labName,
+      'lab_address': instance.labAddress,
+      'test_number': instance.testNumber,
       'categories': instance.categories,
     };
 

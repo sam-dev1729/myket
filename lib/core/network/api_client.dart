@@ -44,6 +44,23 @@ class ApiClient {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          // AI extraction can take much longer than regular requests.
+          if (options.path.contains(AppConstants.labTestExtractEndpoint)) {
+            options.receiveTimeout = const Duration(
+              seconds: AppConstants.aiAnalysisTimeoutSeconds,
+            );
+          }
+
+          // Chunk uploads can also be slow on mobile networks.
+          if (options.path.contains(AppConstants.fileUploadBaseEndpoint)) {
+            options.receiveTimeout = const Duration(
+              seconds: AppConstants.fileUploadTimeoutSeconds,
+            );
+            options.sendTimeout = const Duration(
+              seconds: AppConstants.fileUploadTimeoutSeconds,
+            );
+          }
+
           if (!options.path.contains(AppConstants.sendOtpEndpoint) &&
               !options.path.contains(AppConstants.validateOtpEndpoint) &&
               !options.path.contains(AppConstants.registerPatientEndpoint) &&

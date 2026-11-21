@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/network/api_client.dart';
+import '../../../core/utils/optional.dart';
 import 'lab_test_api.dart';
 import 'models/lab_test_models.dart';
 
@@ -17,24 +18,62 @@ class LabTestRepository {
   }
 
   /// Creates a lab test header and saves its tree.
-  Future<void> saveLabTest(List<String> fileIds, ExtractedLabTest extractedData) async {
-    final createResponse = await api.createLabTest(
-      CreateLabTestRequest(
-        fileIds: fileIds,
-        testDate: extractedData.testDate,
-        doctorName: extractedData.doctorName,
-        labName: extractedData.labName,
-      ),
-    );
-    if (!createResponse.success) throw createResponse.error!;
+  ///
+  /// Pass [existingTestId] (and use [onTestCreated] to capture the id) when
+  /// retrying a failed save, so a partially-created test is not duplicated.
+  Future<void> saveLabTest(
+    List<String> fileIds,
+    ExtractedLabTest extractedData, {
+    String? existingTestId,
+    void Function(String id)? onTestCreated,
+  }) async {
+    String? createdId = existingTestId;
 
-    final createdId = createResponse.body?.id;
-    if (createdId == null) throw Exception('Failed to get lab test ID');
+    if (createdId == null) {
+      final createResponse = await api.createLabTest(
+        CreateLabTestRequest(
+          fileIds: fileIds,
+          testDate: extractedData.testDate,
+          doctorName: extractedData.doctorName,
+          labName: extractedData.labName,
+        ),
+      );
+      if (!createResponse.success) throw createResponse.error!;
+
+      createdId = createResponse.body?.id;
+      if (createdId == null) {
+        throw Exception('Failed to get lab test ID');
+      }
+      onTestCreated?.call(createdId);
+    }
+
+    final testId = createdId;
+
+    // The create endpoint only accepts date/doctor/lab, so address and test
+    // number are patched right after creation when the user edited them.
+    final labAddress = _nullIfEmpty(extractedData.labAddress);
+    final testNumber = _nullIfEmpty(extractedData.testNumber);
+    if (labAddress != null || testNumber != null) {
+      final headerResponse = await api.updateLabTestHeader(
+        testId,
+        UpdateLabTestHeaderRequest(
+          labAddress: Optional.ofNullable(labAddress),
+          testNumber: Optional.ofNullable(testNumber),
+        ),
+      );
+      if (!headerResponse.success) throw headerResponse.error!;
+    }
 
     if (extractedData.categories != null && extractedData.categories!.isNotEmpty) {
-      final treeResponse = await api.saveLabTestTree(createdId, extractedData.categories!);
+      final treeResponse = await api.saveLabTestTree(testId, extractedData.categories!);
       if (!treeResponse.success) throw treeResponse.error!;
     }
+  }
+
+  /// Returns null for null/blank [value].
+  String? _nullIfEmpty(String? value) {
+    final trimmed = value?.trim();
+    return (trimmed == null || trimmed.isEmpty) ? null : trimmed;
   }
 
   /// Fetches the list of saved lab tests.

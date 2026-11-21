@@ -27,6 +27,8 @@ InitUploadResponse _$InitUploadResponseFromJson(Map<String, dynamic> json) =>
       uploadId: json['upload_id'] as String,
       chunkSize: (json['chunk_size'] as num).toInt(),
       totalSize: (json['total_size'] as num).toInt(),
+      receivedBytes: (json['received_bytes'] as num?)?.toInt() ?? 0,
+      expiresAt: json['expires_at'] as String?,
     );
 
 Map<String, dynamic> _$InitUploadResponseToJson(InitUploadResponse instance) =>
@@ -34,7 +36,49 @@ Map<String, dynamic> _$InitUploadResponseToJson(InitUploadResponse instance) =>
       'upload_id': instance.uploadId,
       'chunk_size': instance.chunkSize,
       'total_size': instance.totalSize,
+      'received_bytes': instance.receivedBytes,
+      'expires_at': instance.expiresAt,
     };
+
+UploadStatus _$UploadStatusFromJson(Map<String, dynamic> json) => UploadStatus(
+  uploadId: json['upload_id'] as String,
+  name: json['name'] as String,
+  source: json['source'] as String,
+  status: json['status'] as String,
+  totalSize: (json['total_size'] as num).toInt(),
+  receivedBytes: (json['received_bytes'] as num).toInt(),
+  chunkSize: (json['chunk_size'] as num).toInt(),
+  expiresAt: json['expires_at'] as String?,
+);
+
+Map<String, dynamic> _$UploadStatusToJson(UploadStatus instance) =>
+    <String, dynamic>{
+      'upload_id': instance.uploadId,
+      'name': instance.name,
+      'source': instance.source,
+      'status': instance.status,
+      'total_size': instance.totalSize,
+      'received_bytes': instance.receivedBytes,
+      'chunk_size': instance.chunkSize,
+      'expires_at': instance.expiresAt,
+    };
+
+UploadChunkResponse _$UploadChunkResponseFromJson(Map<String, dynamic> json) =>
+    UploadChunkResponse(
+      uploadId: json['upload_id'] as String,
+      receivedBytes: (json['received_bytes'] as num).toInt(),
+      totalSize: (json['total_size'] as num).toInt(),
+      complete: json['complete'] as bool,
+    );
+
+Map<String, dynamic> _$UploadChunkResponseToJson(
+  UploadChunkResponse instance,
+) => <String, dynamic>{
+  'upload_id': instance.uploadId,
+  'received_bytes': instance.receivedBytes,
+  'total_size': instance.totalSize,
+  'complete': instance.complete,
+};
 
 FileResponse _$FileResponseFromJson(Map<String, dynamic> json) => FileResponse(
   id: json['id'] as String,

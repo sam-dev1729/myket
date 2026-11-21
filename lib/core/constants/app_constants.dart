@@ -51,6 +51,24 @@ class AppConstants {
 
   static const String analyteSeriesRoute = '/analyte-series';
 
+  /// Overall health report screen.
+  static const String healthReportRoute = '/health-report';
+
+  /// Doctor-assistant advice screen.
+  static const String doctorAdviceRoute = '/doctor-advice';
+
+  /// Local AI assistant chat screen.
+  static const String aiAssistantRoute = '/ai-assistant';
+
+  /// Multi-test comparison selection screen.
+  static const String compareTestsRoute = '/compare-tests';
+
+  /// Saved blood/urine lab tests list.
+  static const String bloodTestsRoute = '/blood-tests';
+
+  /// Comparison result screen (receives the selected ids via `extra`).
+  static const String compareResultRoute = '/compare-result';
+
   /// Search debounce for analyzer picker.
   static const Duration searchDebounceDuration = Duration(milliseconds: 300);
 
@@ -119,6 +137,21 @@ class AppConstants {
 
   static const String fileUploadInitEndpoint = '/file/upload/init';
   static const String fileUploadBaseEndpoint = '/file/upload';
+
+  /// Number of automatic attempts for a failed upload chunk.
+  static const int maxUploadChunkRetries = 4;
+
+  /// Base delay between upload-chunk retries (multiplied by the attempt).
+  static const int uploadRetryBackoffMs = 400;
+
+  /// Per-request timeout for file upload calls (8 MB chunks can be slow).
+  static const int fileUploadTimeoutSeconds = 90;
+
+  /// Upload session status returned by `GET /file/upload/{id}`.
+  static const String uploadStatusPending = 'PENDING';
+
+  /// Upload session status once all bytes have been received.
+  static const String uploadStatusCompleted = 'COMPLETED';
 
   // ─────────────────────────────────────────────────────────────
   // Lab Test Endpoints
@@ -264,6 +297,13 @@ class AppConstants {
   // ─────────────────────────────────────────────────────────────
 
   static const int apiTimeoutSeconds = 15;
+
+  /// Timeout used for the AI lab-test extraction request.
+  ///
+  /// The AI analysis of an uploaded PDF/image can take much longer than a
+  /// normal API call, so `POST /lab-test/extract` gets its own 90s budget.
+  static const int aiAnalysisTimeoutSeconds = 90;
+
   static const int splashDelaySeconds = 2;
   static const int splashTimeoutSeconds = 10;
   static const int fileChunkSize = 8388608;
@@ -422,6 +462,25 @@ class AppConstants {
 
   /// Duration of the highlight animation when a theme is selected.
   static const Duration themeSelectAnimation = Duration(milliseconds: 180);
+
+  // ─────────────────────────────────────────────────────────────
+  // Lab Test Comparison
+  // ─────────────────────────────────────────────────────────────
+
+  /// Width of the parameter-name column in the comparison table.
+  static const double compareParameterColumnWidth = 132.0;
+
+  /// Width of the normal-range column in the comparison table.
+  static const double compareRangeColumnWidth = 100.0;
+
+  /// Width of each lab-test column in the comparison table.
+  static const double compareTestColumnWidth = 104.0;
+
+  /// Maximum number of lab tests that can be compared side by side.
+  static const int compareMaxTests = 3;
+
+  /// Minimum number of lab tests required for a comparison.
+  static const int compareMinTests = 2;
   
   // ─────────────────────────────────────────────────────────────
   // Border Widths (added in PKG-013-001 — Sprint 9.b)

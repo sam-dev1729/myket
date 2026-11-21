@@ -1027,7 +1027,7 @@ abstract class AppLocalizations {
   /// No description provided for @selectFile.
   ///
   /// In fa, this message translates to:
-  /// **'انتخاب فایل آزمایش (PDF)'**
+  /// **'انتخاب فایل آزمایش'**
   String get selectFile;
 
   /// No description provided for @uploadingFile.
@@ -2715,6 +2715,336 @@ abstract class AppLocalizations {
   /// In fa, this message translates to:
   /// **'شبانه'**
   String get themeDark;
+
+  /// No description provided for @analysisActionsTitle.
+  ///
+  /// In fa, this message translates to:
+  /// **'بررسی و تحلیل آزمایش'**
+  String get analysisActionsTitle;
+
+  /// No description provided for @analysisReportAction.
+  ///
+  /// In fa, this message translates to:
+  /// **'گزارش کلی سلامت'**
+  String get analysisReportAction;
+
+  /// No description provided for @analysisCompareAction.
+  ///
+  /// In fa, this message translates to:
+  /// **'مقایسه چند آزمایش'**
+  String get analysisCompareAction;
+
+  /// No description provided for @analysisTrendAction.
+  ///
+  /// In fa, this message translates to:
+  /// **'تغییرات در طول زمان'**
+  String get analysisTrendAction;
+
+  /// No description provided for @close.
+  ///
+  /// In fa, this message translates to:
+  /// **'بستن'**
+  String get close;
+
+  /// No description provided for @uploadSheetTitle.
+  ///
+  /// In fa, this message translates to:
+  /// **'بارگذاری آزمایش'**
+  String get uploadSheetTitle;
+
+  /// No description provided for @uploadPdfSource.
+  ///
+  /// In fa, this message translates to:
+  /// **'فایل PDF'**
+  String get uploadPdfSource;
+
+  /// No description provided for @uploadCameraSource.
+  ///
+  /// In fa, this message translates to:
+  /// **'دوربین'**
+  String get uploadCameraSource;
+
+  /// No description provided for @uploadGallerySource.
+  ///
+  /// In fa, this message translates to:
+  /// **'گالری'**
+  String get uploadGallerySource;
+
+  /// No description provided for @uploadFileButton.
+  ///
+  /// In fa, this message translates to:
+  /// **'آپلود فایل'**
+  String get uploadFileButton;
+
+  /// No description provided for @chooseAnotherFile.
+  ///
+  /// In fa, this message translates to:
+  /// **'انتخاب فایل دیگر'**
+  String get chooseAnotherFile;
+
+  /// No description provided for @retryUpload.
+  ///
+  /// In fa, this message translates to:
+  /// **'تلاش مجدد آپلود'**
+  String get retryUpload;
+
+  /// No description provided for @retryAnalysis.
+  ///
+  /// In fa, this message translates to:
+  /// **'تلاش مجدد تحلیل'**
+  String get retryAnalysis;
+
+  /// No description provided for @uploadAttempt.
+  ///
+  /// In fa, this message translates to:
+  /// **'تلاش {attempt} از {maxAttempts}'**
+  String uploadAttempt(int attempt, int maxAttempts);
+
+  /// No description provided for @fileSizeMb.
+  ///
+  /// In fa, this message translates to:
+  /// **'{size} مگابایت'**
+  String fileSizeMb(String size);
+
+  /// No description provided for @filePickFailed.
+  ///
+  /// In fa, this message translates to:
+  /// **'انتخاب فایل انجام نشد.'**
+  String get filePickFailed;
+
+  /// No description provided for @analysisRetryHint.
+  ///
+  /// In fa, this message translates to:
+  /// **'فایل شما آپلود شده است؛ فقط تحلیل دوباره انجام می‌شود.'**
+  String get analysisRetryHint;
+
+  /// No description provided for @resumeUploadButton.
+  ///
+  /// In fa, this message translates to:
+  /// **'ادامه آپلود'**
+  String get resumeUploadButton;
+
+  /// No description provided for @resumeUploadHint.
+  ///
+  /// In fa, this message translates to:
+  /// **'ادامه آپلود قبلی از {percent}٪'**
+  String resumeUploadHint(int percent);
+
+  /// No description provided for @addLabTestButton.
+  ///
+  /// In fa, this message translates to:
+  /// **'افزودن آزمایش'**
+  String get addLabTestButton;
+
+  /// No description provided for @healthReportTitle.
+  ///
+  /// In fa, this message translates to:
+  /// **'گزارش کلی سلامت'**
+  String get healthReportTitle;
+
+  /// No description provided for @reportDateLabel.
+  ///
+  /// In fa, this message translates to:
+  /// **'تاریخ گزارش'**
+  String get reportDateLabel;
+
+  /// No description provided for @reportAnalyzedTestsLabel.
+  ///
+  /// In fa, this message translates to:
+  /// **'تعداد آزمایش‌های تحلیل‌شده'**
+  String get reportAnalyzedTestsLabel;
+
+  /// No description provided for @reportAnalyzedTests.
+  ///
+  /// In fa, this message translates to:
+  /// **'{count} آزمایش'**
+  String reportAnalyzedTests(int count);
+
+  /// No description provided for @importantParametersLabel.
+  ///
+  /// In fa, this message translates to:
+  /// **'پارامترهای مهم'**
+  String get importantParametersLabel;
+
+  /// No description provided for @importantParametersHint.
+  ///
+  /// In fa, this message translates to:
+  /// **'توجه: پارامترهایی که این علامت را دارند بر اساس آزمایش‌های قدیمی لحاظ شده‌اند و نیاز به نتایج جدیدتر دارند.'**
+  String get importantParametersHint;
+
+  /// No description provided for @viewAllAdvice.
+  ///
+  /// In fa, this message translates to:
+  /// **'مشاهده همه توصیه‌ها'**
+  String get viewAllAdvice;
+
+  /// No description provided for @doctorAdviceTitle.
+  ///
+  /// In fa, this message translates to:
+  /// **'توصیه‌های دستیار پزشک'**
+  String get doctorAdviceTitle;
+
+  /// No description provided for @askAiTitle.
+  ///
+  /// In fa, this message translates to:
+  /// **'سوالات بیشتری دارید؟'**
+  String get askAiTitle;
+
+  /// No description provided for @askAiSubtitle.
+  ///
+  /// In fa, this message translates to:
+  /// **'از هوش مصنوعی بپرسید'**
+  String get askAiSubtitle;
+
+  /// No description provided for @aiAssistantTitle.
+  ///
+  /// In fa, this message translates to:
+  /// **'گفتگو با دستیار هوش مصنوعی'**
+  String get aiAssistantTitle;
+
+  /// No description provided for @aiDisclaimer.
+  ///
+  /// In fa, this message translates to:
+  /// **'جواب‌های هوش مصنوعی جایگزین مراجعه به پزشک نیستند. قبل از هر اقدامی از متخصصین راهنمایی لازم را کسب کنید.'**
+  String get aiDisclaimer;
+
+  /// No description provided for @aiInputHint.
+  ///
+  /// In fa, this message translates to:
+  /// **'چیزی بپرسید'**
+  String get aiInputHint;
+
+  /// No description provided for @aiGreeting.
+  ///
+  /// In fa, this message translates to:
+  /// **'سلام! من دستیار هوش مصنوعی سلامت شما هستم. نتایج آزمایش‌های اخیر شما را تحلیل کرده‌ام. چطور می‌توانم کمک کنم؟'**
+  String get aiGreeting;
+
+  /// No description provided for @aiGreetingStatus.
+  ///
+  /// In fa, this message translates to:
+  /// **'وضعیت کلی سلامت شما: {status}'**
+  String aiGreetingStatus(String status);
+
+  /// No description provided for @aiMarkerAnswer.
+  ///
+  /// In fa, this message translates to:
+  /// **'مقدار {name} شما {value} {unit} است (محدوده نرمال: {range}). وضعیت: {status}.'**
+  String aiMarkerAnswer(
+    String name,
+    String value,
+    String unit,
+    String range,
+    String status,
+  );
+
+  /// No description provided for @aiOverallAnswer.
+  ///
+  /// In fa, this message translates to:
+  /// **'وضعیت کلی سلامت شما {status} است و {abnormal} پارامتر خارج از محدوده نرمال دارید.'**
+  String aiOverallAnswer(String status, int abnormal);
+
+  /// No description provided for @aiAdviceIntro.
+  ///
+  /// In fa, this message translates to:
+  /// **'بر اساس وضعیت فعلی، این موارد را در نظر بگیرید:'**
+  String get aiAdviceIntro;
+
+  /// No description provided for @aiFallbackAnswer.
+  ///
+  /// In fa, this message translates to:
+  /// **'برای پاسخ دقیق‌تر، نام یک پارامتر آزمایش (مثل قند، کلسترول یا هموگلوبین) یا وضعیت کلی سلامت را بپرسید.'**
+  String get aiFallbackAnswer;
+
+  /// No description provided for @aiFallbackAnswerWithMarkers.
+  ///
+  /// In fa, this message translates to:
+  /// **'من می‌توانم درباره این پارامترها توضیح بدهم: {markers}. نام پارامتر یا وضعیت کلی سلامت را بپرسید.'**
+  String aiFallbackAnswerWithMarkers(String markers);
+
+  /// No description provided for @compareTestsTitle.
+  ///
+  /// In fa, this message translates to:
+  /// **'مقایسه چند آزمایش'**
+  String get compareTestsTitle;
+
+  /// No description provided for @compareSelectionTitle.
+  ///
+  /// In fa, this message translates to:
+  /// **'چند آزمایش را انتخاب کنید'**
+  String get compareSelectionTitle;
+
+  /// No description provided for @compareSelectionHint.
+  ///
+  /// In fa, this message translates to:
+  /// **'از بین آزمایش‌های زیر حداکثر سه مورد را انتخاب کنید. نتایج در یک جدول در کنار هم نمایش داده می‌شود.'**
+  String get compareSelectionHint;
+
+  /// No description provided for @compareAction.
+  ///
+  /// In fa, this message translates to:
+  /// **'مقایسه'**
+  String get compareAction;
+
+  /// No description provided for @compareMaxSelection.
+  ///
+  /// In fa, this message translates to:
+  /// **'حداکثر سه آزمایش قابل انتخاب است.'**
+  String get compareMaxSelection;
+
+  /// No description provided for @compareResultTitle.
+  ///
+  /// In fa, this message translates to:
+  /// **'مقایسه {count} آزمایش'**
+  String compareResultTitle(int count);
+
+  /// No description provided for @compareNoCommonParameters.
+  ///
+  /// In fa, this message translates to:
+  /// **'پارامتر مشترکی برای مقایسه پیدا نشد.'**
+  String get compareNoCommonParameters;
+
+  /// No description provided for @downloadReportButton.
+  ///
+  /// In fa, this message translates to:
+  /// **'دانلود گزارش'**
+  String get downloadReportButton;
+
+  /// No description provided for @reportSavedSuccess.
+  ///
+  /// In fa, this message translates to:
+  /// **'گزارش با موفقیت ذخیره شد.'**
+  String get reportSavedSuccess;
+
+  /// No description provided for @reportDownloadFailed.
+  ///
+  /// In fa, this message translates to:
+  /// **'ذخیره گزارش انجام نشد.'**
+  String get reportDownloadFailed;
+
+  /// No description provided for @reportShareFailed.
+  ///
+  /// In fa, this message translates to:
+  /// **'اشتراک‌گذاری گزارش انجام نشد.'**
+  String get reportShareFailed;
+
+  /// No description provided for @readMoreDescription.
+  ///
+  /// In fa, this message translates to:
+  /// **'مقالات زیر کمک می‌کنند اطلاعات بیشتری در مورد سلامت خود داشته باشید.'**
+  String get readMoreDescription;
+
+  /// No description provided for @viewHealthReport.
+  ///
+  /// In fa, this message translates to:
+  /// **'مشاهده گزارش سلامت'**
+  String get viewHealthReport;
+
+  /// No description provided for @viewLabTests.
+  ///
+  /// In fa, this message translates to:
+  /// **'مشاهده آزمایش‌ها'**
+  String get viewLabTests;
 }
 
 class _AppLocalizationsDelegate

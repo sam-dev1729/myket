@@ -11,13 +11,19 @@ import '../../features/financial/presentation/packages_screen.dart';
 import '../../features/financial/presentation/payment_status_screen.dart';
 import '../../features/financial/presentation/topup_screen.dart';
 import '../../features/financial/presentation/transactions_screen.dart';
+import '../../features/lab_test/presentation/ai_assistant_screen.dart';
 import '../../features/lab_test/presentation/analyte_series_screen.dart';
+import '../../features/lab_test/presentation/compare_result_screen.dart';
+import '../../features/lab_test/presentation/compare_tests_screen.dart';
+import '../../features/lab_test/presentation/doctor_advice_screen.dart';
+import '../../features/lab_test/presentation/health_report_screen.dart';
 import '../../features/lab_test/presentation/edit_lab_test_screen.dart';
 import '../../features/lab_test/presentation/lab_overview_screen.dart';
 import '../../features/lab_test/presentation/lab_test_detail_screen.dart';
 import '../../features/lab_test/presentation/screens/empty_package_screen.dart';
 import '../../features/lab_test/presentation/upload_lab_test_screen.dart';
 import '../../features/main/presentation/main_screen.dart';
+import '../../features/main/presentation/tabs/blood_test_tab.dart';
 import '../../features/notifications/presentation/notifications_screen.dart';
 import '../../features/profile/presentation/edit_profile_screen.dart';
 import '../../features/financial/presentation/package_history_screen.dart';
@@ -126,6 +132,21 @@ final appRouter = GoRouter(
     GoRoute(path: AppConstants.labOverviewRoute, builder: (_, _) => const LabOverviewScreen()),
 
     GoRoute(path: AppConstants.analyteSeriesRoute, builder: (_, _) => const AnalyteSeriesScreen()),
+    GoRoute(
+      path: AppConstants.bloodTestsRoute,
+      builder: (_, _) => const BloodTestTab(showBackButton: true),
+    ),
+    GoRoute(path: AppConstants.healthReportRoute, builder: (_, _) => const HealthReportScreen()),
+    GoRoute(path: AppConstants.doctorAdviceRoute, builder: (_, _) => const DoctorAdviceScreen()),
+    GoRoute(path: AppConstants.aiAssistantRoute, builder: (_, _) => const AiAssistantScreen()),
+    GoRoute(path: AppConstants.compareTestsRoute, builder: (_, _) => const CompareTestsScreen()),
+    GoRoute(
+      path: AppConstants.compareResultRoute,
+      builder: (_, state) {
+        final ids = (state.extra as List<String>?) ?? const <String>[];
+        return CompareResultScreen(testIds: ids);
+      },
+    ),
     // ─────────────────────────────────────────────────────────
     // Financial routes
     // ─────────────────────────────────────────────────────────
